@@ -1,0 +1,426 @@
+{
+  "general_notes": "This plan is designed to help you build muscle, focusing on high-protein nutrition and progressive strength training, while respecting your nut-free dietary restriction. Remember to listen to your body, adjust weights/reps as needed, and ensure proper form. Consistency is key! This plan is a suggestion and should not replace professional medical or dietary advice. Consult with a healthcare professional before starting any new fitness or diet regimen.",
+  "weekly_plan": {
+    "friday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Scrambled eggs (3-4) with spinach, bell peppers, and a side of sliced avocado. Serve with 2 slices of whole-wheat toast.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Grilled chicken breast salad with mixed greens, cucumber, tomatoes, quinoa (1/2 cup cooked), and a light vinaigrette (oil and vinegar based).",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Greek yogurt (plain, high-protein) with berries (strawberries, blueberries) and a sprinkle of sunflower seeds (if tolerated for nut-free).",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Baked salmon fillet (6-8 oz) with roasted sweet potato (1 medium) and steamed green beans.",
+            "meal_type": "Dinner"
+          },
+          {
+            "description": "Protein shake with water or oat milk.",
+            "meal_type": "Post-workout"
+          }
+        ],
+        "daily_notes": "Focus on consistent protein intake throughout the day to support muscle repair and growth. Stay hydrated.",
+        "estimated_calories": 3050,
+        "macronutrient_summary": {
+          "carbs_grams": 395,
+          "fat_grams": 80,
+          "protein_grams": 175
+        }
+      },
+      "workout": {
+        "duration_minutes": 60,
+        "exercises": [
+          {
+            "name": "Dumbbell Overhead Press",
+            "notes": "Control the weight on the way down.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Barbell Bench Press",
+            "notes": "Maintain a slight arch in your back.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Bent-Over Dumbbell Rows",
+            "notes": "Keep your back straight, squeeze shoulder blades.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Lateral Raises (Dumbbells)",
+            "notes": "Focus on shoulder isolation, avoid swinging.",
+            "reps": "12-15",
+            "sets": "3"
+          },
+          {
+            "name": "Bicep Curls (Barbell or Dumbbell)",
+            "notes": "Full range of motion, squeeze at the top.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Tricep Pushdowns (Cable or Dumbbell)",
+            "notes": "Isolate triceps, keep elbows tucked.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Plank",
+            "notes": "Engage core, keep body in a straight line.",
+            "reps": "60 seconds",
+            "sets": "3"
+          }
+        ],
+        "type": "Upper Body Strength & Core",
+        "notes": "Focus on controlled movements and progressive overload. Aim to increase weight or reps over time."
+      }
+    },
+    "monday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Oatmeal (1 cup dry) cooked with water or oat milk, mixed with 1 scoop protein powder (vanilla/unflavored), and topped with sliced banana.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Turkey and vegetable stir-fry (turkey mince, broccoli, carrots, bell peppers) with brown rice (1 cup cooked). Use soy sauce (or tamari for gluten-free) and ginger for flavor.",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Cottage cheese (1 cup) with sliced pineapple.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Lean ground beef (6-7 oz cooked) chili with kidney beans, diced tomatoes, and spices. Serve with a small whole-wheat tortilla.",
+            "meal_type": "Dinner"
+          },
+          {
+            "description": "Greek yogurt (plain, high-protein) with a handful of berries.",
+            "meal_type": "Post-workout"
+          }
+        ],
+        "daily_notes": "Prioritize protein intake at every meal to support muscle synthesis. Drink plenty of water throughout the day.",
+        "estimated_calories": 3100,
+        "macronutrient_summary": {
+          "carbs_grams": 400,
+          "fat_grams": 85,
+          "protein_grams": 170
+        }
+      },
+      "workout": {
+        "duration_minutes": 60,
+        "exercises": [
+          {
+            "name": "Barbell Squats",
+            "notes": "Focus on depth and maintaining a straight back.",
+            "reps": "8-12",
+            "sets": "4"
+          },
+          {
+            "name": "Romanian Deadlifts (Dumbbells or Barbell)",
+            "notes": "Feel the stretch in your hamstrings, keep a slight bend in knees.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Leg Press",
+            "notes": "Go for a full range of motion without locking knees at the top.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Walking Lunges (Dumbbells)",
+            "notes": "Maintain balance, step with purpose.",
+            "reps": "10-12 per leg",
+            "sets": "3"
+          },
+          {
+            "name": "Hamstring Curls (Machine)",
+            "notes": "Slow and controlled movement.",
+            "reps": "12-15",
+            "sets": "3"
+          },
+          {
+            "name": "Calf Raises (Standing)",
+            "notes": "Pause at the top, feel the squeeze.",
+            "reps": "15-20",
+            "sets": "3"
+          }
+        ],
+        "type": "Lower Body Strength",
+        "notes": "Warm up with light cardio for 5-10 minutes. Perform dynamic stretches before and static stretches after your workout."
+      }
+    },
+    "saturday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Protein pancakes (made with protein powder, egg, and oat flour) with fruit and a drizzle of maple syrup.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Leftover Baked Salmon with a large mixed green salad.",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Hard-boiled eggs (2) with an apple.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Chicken and veggie skewers (chicken chunks, bell peppers, onions, zucchini) grilled, served with couscous.",
+            "meal_type": "Dinner"
+          }
+        ],
+        "daily_notes": "Enjoy your rest day! Focus on nutrient-dense meals and staying active with light activities like walking.",
+        "estimated_calories": 2900,
+        "macronutrient_summary": {
+          "carbs_grams": 370,
+          "fat_grams": 75,
+          "protein_grams": 165
+        }
+      },
+      "workout": {
+        "duration_minutes": 0,
+        "exercises": [],
+        "type": "Rest",
+        "notes": "Active recovery day. Consider a leisurely walk, light stretching, or yoga to aid recovery."
+      }
+    },
+    "sunday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Omelette (3 eggs) with mushrooms, onions, and cheese, served with a side of fruit salad.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Tuna (canned in water) salad (mixed with Greek yogurt or mayo) on whole-wheat bread with lettuce and tomato. Serve with carrot sticks.",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Rice cakes (2) with a slice of lean turkey breast.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Baked cod (6 oz) with roasted potatoes and a side of asparagus.",
+            "meal_type": "Dinner"
+          }
+        ],
+        "daily_notes": "Plan and prepare meals for the upcoming week to ensure consistency with your high-protein, nut-free diet.",
+        "estimated_calories": 2800,
+        "macronutrient_summary": {
+          "carbs_grams": 350,
+          "fat_grams": 70,
+          "protein_grams": 160
+        }
+      },
+      "workout": {
+        "duration_minutes": 0,
+        "exercises": [],
+        "type": "Rest",
+        "notes": "Full rest day. Allow your body to fully recover and prepare for the next week's workouts."
+      }
+    },
+    "thursday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Smoothie: oat milk (1 cup), 1 scoop protein powder, 1 banana, 1/2 cup spinach, 1 tbsp chia seeds (if tolerated for nut-free).",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Quinoa bowl with black beans, corn, grilled shrimp (5-6 oz), avocado, and salsa.",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Protein bar (ensure nut-free) or a hard-boiled egg.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Shepherd's Pie with lean ground beef, mixed vegetables (peas, carrots), topped with mashed sweet potato.",
+            "meal_type": "Dinner"
+          },
+          {
+            "description": "Cottage cheese (1 cup) with a few slices of peach.",
+            "meal_type": "Post-workout"
+          }
+        ],
+        "daily_notes": "Pre- and post-workout nutrition is important. Ensure you have carbs and protein around your workout time.",
+        "estimated_calories": 3150,
+        "macronutrient_summary": {
+          "carbs_grams": 410,
+          "fat_grams": 85,
+          "protein_grams": 175
+        }
+      },
+      "workout": {
+        "duration_minutes": 50,
+        "exercises": [
+          {
+            "name": "Kettlebell Swings",
+            "notes": "Explosive movement, focus on hip hinge.",
+            "reps": "15-20",
+            "sets": "3-4"
+          },
+          {
+            "name": "Box Jumps (or Step-ups)",
+            "notes": "Land softly, choose an appropriate box height.",
+            "reps": "8-10",
+            "sets": "3"
+          },
+          {
+            "name": "Push-ups (or Elevated Push-ups)",
+            "notes": "Full range of motion, chest to the floor.",
+            "reps": "As many as possible",
+            "sets": "3"
+          },
+          {
+            "name": "Renegade Rows (Dumbbells)",
+            "notes": "Keep core stable, minimize hip rotation.",
+            "reps": "8-10 per arm",
+            "sets": "3"
+          },
+          {
+            "name": "Mountain Climbers",
+            "notes": "Keep core engaged, steady pace.",
+            "reps": "45 seconds",
+            "sets": "3"
+          },
+          {
+            "name": "Battle Ropes (Waves/Slams)",
+            "notes": "Focus on power and full body engagement.",
+            "reps": "45 seconds",
+            "sets": "3"
+          }
+        ],
+        "type": "Full Body Strength & HIIT",
+        "notes": "This workout blends strength with higher intensity to boost metabolism and improve endurance. Keep rest times short (60-90 seconds)."
+      }
+    },
+    "tuesday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Greek yogurt (plain, high-protein) with berries (strawberries, blueberries) and a sprinkle of pumpkin seeds.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Chicken breast (5-6 oz) and roasted vegetable wrap (bell peppers, zucchini, onions) in a whole-wheat tortilla with hummus (ensure nut-free).",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Rice cakes (2) with mashed avocado and 'Everything but the Bagel' seasoning.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Lean pork loin (6 oz) with quinoa (1 cup cooked) and a large serving of mixed steamed vegetables (broccoli, cauliflower).",
+            "meal_type": "Dinner"
+          },
+          {
+            "description": "Protein pudding (made with protein powder and a thickener like chia seeds, if tolerated).",
+            "meal_type": "Post-workout"
+          }
+        ],
+        "daily_notes": "Ensure all snacks are nut-free. Focus on a good balance of macros to fuel your second strength day.",
+        "estimated_calories": 3000,
+        "macronutrient_summary": {
+          "carbs_grams": 380,
+          "fat_grams": 80,
+          "protein_grams": 170
+        }
+      },
+      "workout": {
+        "duration_minutes": 60,
+        "exercises": [
+          {
+            "name": "Barbell Overhead Press",
+            "notes": "Press weight directly overhead, control the eccentric.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Incline Dumbbell Press",
+            "notes": "Focus on chest engagement, squeeze at the top.",
+            "reps": "8-12",
+            "sets": "3-4"
+          },
+          {
+            "name": "Pull-ups (or Lat Pulldowns)",
+            "notes": "Aim for controlled pull, engage your lats.",
+            "reps": "6-10 (or 8-12 for pulldowns)",
+            "sets": "3-4"
+          },
+          {
+            "name": "Seated Cable Rows",
+            "notes": "Pull with your back, not just arms. Squeeze shoulder blades.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Dumbbell Bicep Curls",
+            "notes": "Keep elbows close to your body.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Overhead Tricep Extension (Dumbbell)",
+            "notes": "Focus on tricep stretch, keep elbows pointing forward.",
+            "reps": "10-15",
+            "sets": "3"
+          },
+          {
+            "name": "Face Pulls (Cable or Resistance Band)",
+            "notes": "Great for rear delts and posture.",
+            "reps": "12-15",
+            "sets": "3"
+          }
+        ],
+        "type": "Upper Body Strength",
+        "notes": "Ensure proper form is maintained throughout. Take adequate rest between sets (60-120 seconds)."
+      }
+    },
+    "wednesday": {
+      "diet": {
+        "meals_list": [
+          {
+            "description": "Hard-boiled eggs (2-3) with a medium-sized banana.",
+            "meal_type": "Breakfast"
+          },
+          {
+            "description": "Lentil soup with whole-wheat bread on the side.",
+            "meal_type": "Lunch"
+          },
+          {
+            "description": "Apple slices with 2-3 slices of lean deli turkey.",
+            "meal_type": "Snack 1"
+          },
+          {
+            "description": "Chicken breast (6 oz) stir-fry with a variety of vegetables (broccoli, carrots, snow peas) and light soy sauce, served with jasmine rice (1 cup cooked).",
+            "meal_type": "Dinner"
+          }
+        ],
+        "daily_notes": "This is a rest day, but maintain your high-protein intake to support recovery and muscle growth.",
+        "estimated_calories": 2850,
+        "macronutrient_summary": {
+          "carbs_grams": 360,
+          "fat_grams": 70,
+          "protein_grams": 160
+        }
+      },
+      "workout": {
+        "duration_minutes": 0,
+        "exercises": [],
+        "type": "Rest",
+        "notes": "Rest day. Focus on recovery, adequate sleep, and nutrition. Light active recovery like walking is optional."
+      }
+    }
+  }
+}
