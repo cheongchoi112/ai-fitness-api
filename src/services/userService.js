@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -72,7 +72,8 @@ export const findUserById = async (userId) => {
     const db = client.db(DB_NAME);
     const usersCollection = db.collection(COLLECTION_NAME);
 
-    return await usersCollection.findOne({ _id: userId });
+    // Convert string ID to MongoDB ObjectId
+    return await usersCollection.findOne({ _id: new ObjectId(userId) });
   } catch (error) {
     throw error;
   }
@@ -91,7 +92,7 @@ export const updateUser = async (userId, updateData) => {
     const usersCollection = db.collection(COLLECTION_NAME);
 
     const result = await usersCollection.findOneAndUpdate(
-      { _id: userId },
+      { _id: new ObjectId(userId) },
       { $set: { ...updateData, updatedAt: new Date() } },
       { returnDocument: "after" }
     );
@@ -117,7 +118,9 @@ export const deleteUser = async (userId) => {
     const db = client.db(DB_NAME);
     const usersCollection = db.collection(COLLECTION_NAME);
 
-    const result = await usersCollection.deleteOne({ _id: userId });
+    const result = await usersCollection.deleteOne({
+      _id: new ObjectId(userId),
+    });
     return result.deletedCount > 0;
   } catch (error) {
     throw error;
