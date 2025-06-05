@@ -22,7 +22,7 @@ This API allows clients to:
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/ai-fitness-api.git
+git clone https://github.com/cheongchoi112/ai-fitness-api.git
 cd ai-fitness-api
 ```
 
