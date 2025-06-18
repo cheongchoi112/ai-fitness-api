@@ -11,8 +11,7 @@ const PORT = process.env.PORT || 3000; // Get port from .env or default to 3000
 connectDB();
 
 // Start the Express server
-// Use 0.0.0.0 to bind on all network interfaces - required for Cloud Run
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   // More informative log message, especially for Docker environments
   if (process.env.RUNNING_IN_DOCKER) {
     console.log(
