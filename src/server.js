@@ -12,5 +12,20 @@ connectDB();
 
 // Start the Express server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  // More informative log message, especially for Docker environments
+  if (process.env.RUNNING_IN_DOCKER) {
+    console.log(
+      `Server running on port ${PORT} inside container (bound to all interfaces)`
+    );
+    console.log(
+      `Access the API on your host machine at the port you mapped to ${PORT}`
+    );
+  } else {
+    console.log(`Server running on http://localhost:${PORT}`);
+  }
+
+  // Log startup success - helpful for Cloud Run logs
+  console.log(
+    `Express server successfully started and listening on port ${PORT}`
+  );
 });

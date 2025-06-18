@@ -121,6 +121,32 @@ Returns a complete weekly fitness and nutrition plan in JSON format with detaile
 - MongoDB for data storage
 - Google Gemini AI & Vertex AI APIs
 - Swagger for API documentation
+- Docker for containerization
+- Google Cloud Run for deployment
+
+## Containerization & Deployment
+
+This project is containerized with Docker and can be deployed to Google Cloud Run.
+
+### Documentation
+
+- **[Containerization Guide](docs/containerization-guide.md)**: Complete guide for containerizing and deploying the API
+- **[Environment Variables](docs/environment-variables.md)**: Configuration for different environments
+- **[Docker Commands](doc/docker-commands.md)**: Common Docker commands for this project
+
+### Quick Docker Start
+
+```bash
+# Build the Docker image
+docker build -t ai-fitness-api:latest .
+
+# Run locally with Docker
+docker run -p 3000:8080 -e MONGODB_URI="your_mongodb_uri" -e GEMINI_API_KEY="your_api_key" --name ai-fitness-api ai-fitness-api:latest
+
+# Access at http://localhost:3000
+```
+
+For complete deployment instructions to Google Cloud, see the [Containerization Guide](docs/containerization-guide.md).
 
 ## License
 
