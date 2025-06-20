@@ -122,7 +122,29 @@ Now that you have set up Google Cloud, follow these steps to push your Docker im
 3. Set environment variables:
 
    ```powershell
-   gcloud run services update ai-fitness-api --set-env-vars="MONGODB_URI=your_mongodb_uri,GEMINI_API_KEY=your_gemini_api_key" --region us-central1
+   gcloud run services update ai-fitness-api --set-env-vars="MONGODB_URI=your_mongodb_uri,GEMINI_API_KEY=your_gemini_api_key,FIREBASE_API_KEY=your_firebase_api_key,FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com,FIREBASE_PROJECT_ID=your-project-id" --region us-central1
+   ```
+
+   Note: Unlike Docker local development, you CANNOT use a `.env` file directly with Cloud Run. Environment variables must be explicitly set. For Firebase Admin credentials specifically, it's recommended to use Secret Manager (below) rather than environment variables due to formatting issues with the private key.
+
+   a) Set environment variables through Google Cloud Console UI instead of CLI
+
+   b) Use Secret Manager for sensitive credentials (recommended for production):
+
+   ```powershell
+   # Create a secret for Firebase Admin credentials
+   gcloud secrets create firebase-admin-key --data-file="./serviceAccountKey.json"
+
+   # Grant the Cloud Run service access to the secret
+   gcloud secrets add-iam-policy-binding firebase-admin-key \
+       --member="serviceAccount:your-service-account@your-project.iam.gserviceaccount.com" \
+       --role="roles/secretmanager.secretAccessor"
+
+   # Mount the secret in your Cloud Run service
+   gcloud run services update ai-fitness-api \
+       --add-volume=name=firebase-creds,secret=firebase-admin-key,version=latest \
+       --add-volume-mount=volume=firebase-creds,mount-path=/app/src/config/keys/ \
+       --region=us-central1
    ```
 
 4. Get the deployed service URL:

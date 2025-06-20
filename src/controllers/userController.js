@@ -78,18 +78,37 @@ export const login = async (req, res) => {
 export const getUserById = async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await findUserById(userId);
+    console.log(`[getUserById] Attempting to find user with ID: ${userId}`);
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    try {
+      const user = await findUserById(userId);
+
+      if (!user) {
+        console.log(`[getUserById] User not found for ID: ${userId}`);
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Remove password from response
+      const { password, ...userWithoutPassword } = user;
+      console.log(`[getUserById] Successfully found user: ${userId}`);
+
+      res.json(userWithoutPassword);
+    } catch (dbError) {
+      console.error(`[getUserById] Database error: ${dbError.message}`);
+      console.error(`[getUserById] Stack trace: ${dbError.stack}`);
+      if (dbError.name === "BSONTypeError") {
+        console.error("[getUserById] Invalid ObjectId format");
+        return res.status(400).json({ error: "Invalid user ID format" });
+      }
+      throw dbError; // Re-throw to be caught by the outer catch block
     }
-
-    // Remove password from response
-    const { password, ...userWithoutPassword } = user;
-
-    res.json(userWithoutPassword);
   } catch (error) {
-    console.error("Error getting user:", error);
+    console.error(`[getUserById] Unhandled error: ${error.message}`);
+    console.error(`[getUserById] Error type: ${error.name}`);
+    console.error(`[getUserById] Stack trace: ${error.stack}`);
+    console.error(
+      `[getUserById] Request params: ${JSON.stringify(req.params)}`
+    );
     res.status(500).json({ error: "Error getting user" });
   }
 };

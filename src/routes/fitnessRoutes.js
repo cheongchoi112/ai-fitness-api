@@ -4,6 +4,7 @@ import {
   generateVertexAiFitnessPlan,
   generateGeminiFitnessPlan,
 } from "../controllers/fitnessController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -31,6 +32,8 @@ router.post("/echo", echoData);
  *   post:
  *     summary: Generate fitness plan using Vertex AI
  *     tags: [Fitness]
+ *     security:
+ *       - firebaseAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -47,7 +50,7 @@ router.post("/echo", echoData);
  *       500:
  *         description: Error generating plan
  */
-router.post("/vertexai", generateVertexAiFitnessPlan);
+router.post("/vertexai", authMiddleware, generateVertexAiFitnessPlan);
 
 /**
  * @swagger
@@ -55,6 +58,8 @@ router.post("/vertexai", generateVertexAiFitnessPlan);
  *   post:
  *     summary: Generate fitness plan using Gemini
  *     tags: [Fitness]
+ *     security:
+ *       - firebaseAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -71,6 +76,6 @@ router.post("/vertexai", generateVertexAiFitnessPlan);
  *       500:
  *         description: Error generating plan
  */
-router.post("/gemini", generateGeminiFitnessPlan);
+router.post("/gemini", authMiddleware, generateGeminiFitnessPlan);
 
 export default router;
