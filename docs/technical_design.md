@@ -158,7 +158,21 @@ These flows detail the sequence of user actions and system responses.
 7.  **Display Plan to User**: The front-end renders the workout and diet plan in a calendar format for the user.
 8.  **User Confirms or Regenerates Plan**: The user either confirms the displayed plan or clicks to regenerate a new plan, which directly triggers a re-request to the Gemini API (steps 5-7) using their existing profile.
 
-### 4.2. Track Workout Completion
+### 4.2. User Authentication & Session Management
+
+**Description**: How existing users securely authenticate and maintain their session within the application.
+
+**Steps**:
+
+1.  **User Enters Credentials**: The user provides their email and password in the login screen of the React Native app.
+2.  **Firebase Authentication**: The front-end authenticates with Firebase Auth services, which validates the credentials and returns an authentication token upon successful verification.
+3.  **Token Storage**: The app securely stores the authentication token in the device's secure storage for persistent sessions.
+4.  **Authenticated API Requests**: For all subsequent requests to protected endpoints, the app includes the token in the Authorization header using the Bearer scheme.
+5.  **Token Verification**: The AI Fitness API validates the Firebase token on each request using the authMiddleware before granting access to protected resources.
+6.  **Session Management**: The app monitors token expiration and automatically refreshes it when needed to maintain the user session.
+7.  **Secure Logout**: When the user logs out, the app clears the stored token and notifies Firebase Auth to invalidate the session.
+
+### 4.3. Track Workout Completion
 
 **Description**: How a user marks a workout as completed and updates their progress.
 
@@ -170,7 +184,7 @@ These flows detail the sequence of user actions and system responses.
 4.  **Confirm Update**: The back-end sends a success response to the front-end.
 5.  **Display Confirmation**: The front-end visually updates the completed workout.
 
-### 4.3. User Account Deletion
+### 4.4. User Account Deletion
 
 **Description**: The process of a user permanently deleting their account and associated data.
 
