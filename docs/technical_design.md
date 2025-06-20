@@ -18,7 +18,7 @@ The AI Fitness Coach is a mobile application designed to provide users with pers
 The system follows a microservice-oriented architecture with distinct components interacting through APIs.
 
 - **React Native Client**: The user-facing mobile application where users interact with the system. It sends requests to and receives responses from the Backend API.
-- **Node.js/Express.js Backend API**: The central hub for business logic, data persistence, and communication with external services. It handles user authentication, data management (storing user profiles, fitness plans, and progress), and orchestrates requests to the Gemini API.
+- **Node.js/Express.js Backend API**: The central hub for business logic, data persistence, and communication with external services. It works with Firebase Authentication for user authentication and authorization, manages data (storing user profiles, fitness plans, and progress), and orchestrates requests to the Gemini API.
 - **MongoDB**: The NoSQL document database used for persistent storage of all application data, including user credentials, profiles, generated fitness plans, and workout progress.
 - **Gemini API (LLM Service)**: An external AI service responsible for processing user survey data and generating personalized fitness and diet plans.
 
@@ -27,6 +27,7 @@ The system follows a microservice-oriented architecture with distinct components
 - Frontend Framework: React Native
 - Backend Runtime: Node.js
 - Backend Web Framework: Express.js
+- Authentication: Firebase Authentication
 - Database System: MongoDB
 - AI Model: Google Gemini API
 - Communication Protocol: HTTP/HTTPS (RESTful APIs)
@@ -41,11 +42,12 @@ This collection stores core user information, including authentication details a
 ```javascript
 // users collection
 {
-  "_id": "<ObjectId>", // Unique identifier for the user from Firebase Auth.
+  "_id": "<ObjectId>", // MongoDB document ID
+  "firebaseUserId": "<String>", // Unique identifier for the user from Firebase Auth
   "userInfo": {      // Stores user information.
-    "firstName": "<String>", //
+    "firstName": "<String>",
     "lastName": "<String>",
-    "email": "<String>" //
+    "email": "<String>" // Should match the email used in Firebase Auth
   },
   "profile": {          // Stores user's personal and preference data from the survey.
     "personalGoalsExperience": {
@@ -148,12 +150,13 @@ These flows detail the sequence of user actions and system responses.
 **Steps**:
 
 1.  **User Initiates Onboarding**: The user fills out a survey and provides account details on the React Native front-end.
-2.  **Submit User Profile & Survey**: The front-end sends an HTTP request with survey data and credentials to the Node.js/Express.js back-end.
-3.  **Process User Registration & Plan Request**: The back-end saves user credentials in the `users` collection and requests a plan from the Gemini API based on the user's profile.
-4.  **Generate Personalized Plan**: The Gemini API processes survey data and returns a personalized workout/diet plan as JSON.
-5.  **Store & Deliver Plan**: The back-end inserts the JSON plan into the `fitnessPlans` collection and sends it to the front-end.
-6.  **Display Plan to User**: The front-end renders the workout and diet plan in a calendar format for the user.
-7.  **User Confirms or Regenerates Plan**: The user either confirms the displayed plan or clicks to regenerate a new plan, which directly triggers a re-request to the Gemini API (steps 3-6) using their existing profile.
+2.  **Firebase Authentication**: The front-end calls Firebase Auth using email and password to create a new user account and obtains an authentication token.
+3.  **Submit User Profile & Survey**: The front-end sends an HTTP POST request to `/api/users/onboarding` with the Firebase token and survey data.
+4.  **Process User Onboarding**: The back-end verifies the Firebase token, extracts the userId, and saves the user information and profile data to the `users` collection in MongoDB.
+5.  **Generate Personalized Plan**: The back-end calls the Gemini API (via `generateGeminiContent`) with the user's profile data to generate a personalized workout/diet plan as JSON.
+6.  **Store & Deliver Plan**: The back-end inserts the JSON plan into the `fitnessPlans` collection and sends a response with both the user object and fitness plan to the front-end.
+7.  **Display Plan to User**: The front-end renders the workout and diet plan in a calendar format for the user.
+8.  **User Confirms or Regenerates Plan**: The user either confirms the displayed plan or clicks to regenerate a new plan, which directly triggers a re-request to the Gemini API (steps 5-7) using their existing profile.
 
 ### 4.2. Track Workout Completion
 
