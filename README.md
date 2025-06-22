@@ -14,6 +14,7 @@ This API allows clients to:
 
 - **AI-Powered Fitness Plans**: Generate customized workout and diet plans using Google's Gemini and Vertex AI models
 - **User Management**: Create, read, update, and delete user profiles
+- **Firebase Authentication**: Secure API endpoints with Firebase Auth
 - **API Documentation**: Interactive Swagger documentation for easy API exploration
 - **MongoDB Integration**: Store user data and preferences
 
@@ -38,7 +39,14 @@ npm install
 PORT=3000
 MONGODB_URI=your_mongodb_connection_string
 GEMINI_API_KEY=your_gemini_api_key
+FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_ADMIN_PRIVATE_KEY=your_private_key
+FIREBASE_ADMIN_CLIENT_EMAIL=firebase-adminsdk-xxxx@your-project-id.iam.gserviceaccount.com
 ```
+
+See [environment-variables.md](./docs/environment-variables.md) for more details.
 
 ## Usage
 
@@ -60,19 +68,21 @@ The server will be running at `http://localhost:3000`.
 
 ### API Endpoints
 
-#### Fitness Plans
+#### Fitness Plans (Protected - Require Authentication)
 
 - `POST /api/fitness/echo` - Test endpoint that echoes the request body
-- `POST /api/fitness/gemini` - Generate fitness plan using Google's Gemini AI
-- `POST /api/fitness/vertexai` - Generate fitness plan using Vertex AI
+- `POST /api/fitness/gemini` - Generate fitness plan using Google's Gemini AI (requires authentication)
+- `POST /api/fitness/vertexai` - Generate fitness plan using Vertex AI (requires authentication)
 
 #### User Management
 
-- `POST /api/users/signup` - Register a new user
-- `POST /api/users/login` - Login a user
-- `GET /api/users/:id` - Get user by ID
-- `PUT /api/users/:id` - Update user details
-- `DELETE /api/users/:id` - Delete a user
+- `POST /api/users/signup` - Register a new user (handled by Firebase client SDK)
+- `POST /api/users/login` - Login a user (handled by Firebase client SDK)
+- `GET /api/users/:id` - Get user by ID (requires authentication)
+- `PUT /api/users/:id` - Update user details (requires authentication)
+- `DELETE /api/users/:id` - Delete a user (requires authentication)
+
+See [firebase-auth-guide.md](./docs/firebase-auth-guide.md) for authentication details.
 
 ### API Documentation
 

@@ -6,6 +6,7 @@ import {
   updateUserById,
   deleteUserById,
 } from "../controllers/userController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -65,6 +66,8 @@ router.post("/login", login);
  *   get:
  *     summary: Get user by ID
  *     tags: [Users]
+ *     security:
+ *       - firebaseAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -78,7 +81,7 @@ router.post("/login", login);
  *       404:
  *         description: User not found
  */
-router.get("/:id", getUserById);
+router.get("/:id", authMiddleware, getUserById);
 
 /**
  * @swagger
@@ -86,6 +89,8 @@ router.get("/:id", getUserById);
  *   put:
  *     summary: Update user information
  *     tags: [Users]
+ *     security:
+ *       - firebaseAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -105,7 +110,7 @@ router.get("/:id", getUserById);
  *       404:
  *         description: User not found
  */
-router.put("/:id", updateUserById);
+router.put("/:id", authMiddleware, updateUserById);
 
 /**
  * @swagger
@@ -113,6 +118,8 @@ router.put("/:id", updateUserById);
  *   delete:
  *     summary: Delete user
  *     tags: [Users]
+ *     security:
+ *       - firebaseAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -126,6 +133,6 @@ router.put("/:id", updateUserById);
  *       404:
  *         description: User not found
  */
-router.delete("/:id", deleteUserById);
+router.delete("/:id", authMiddleware, deleteUserById);
 
 export default router;

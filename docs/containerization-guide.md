@@ -49,7 +49,15 @@ This document provides comprehensive details about the containerization and depl
 2. **Run container locally**
 
    ```bash
-   docker run -p 3000:8080 -e MONGODB_URI="your_mongodb_uri" -e GEMINI_API_KEY="your_api_key" --name ai-fitness-api ai-fitness-api:latest
+   docker run -p 3000:8080 \
+   -e MONGODB_URI="your_mongodb_connection_string" \
+   -e GEMINI_API_KEY="your_api_key" \
+   -e FIREBASE_API_KEY="your_firebase_api_key" \
+   -e FIREBASE_AUTH_DOMAIN="your-project-id.firebaseapp.com" \
+   -e FIREBASE_PROJECT_ID="your-project-id" \
+   -e FIREBASE_ADMIN_PRIVATE_KEY="your_private_key" \
+   -e FIREBASE_ADMIN_CLIENT_EMAIL="firebase-adminsdk-xxxx@your-project-id.iam.gserviceaccount.com" \
+   --name ai-fitness-api ai-fitness-api:latest
    ```
 
 3. **Test API endpoints**

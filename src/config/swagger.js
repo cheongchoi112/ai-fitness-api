@@ -49,6 +49,14 @@ const options = {
           description: "Generated fitness plan",
         },
       },
+      securitySchemes: {
+        firebaseAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          description: "Firebase Authentication token (JWT)",
+        },
+      },
     },
   },
   apis: ["./src/routes/*.js", "./src/controllers/*.js"],
