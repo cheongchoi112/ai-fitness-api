@@ -147,6 +147,8 @@ These flows detail the sequence of user actions and system responses.
 
 **Description**: The process from a new user signing up to receiving and confirming their initial personalized fitness and diet plan.
 
+![User Onboarding & Personalized Plan Creation](./uml_diagrams/User%20Onboarding%20%26%20Personalized%20Plan%20Creation.png)
+
 **Steps**:
 
 1.  **User Initiates Onboarding**: The user fills out a survey and provides account details on the React Native front-end.
@@ -160,23 +162,35 @@ These flows detail the sequence of user actions and system responses.
 
 ### 4.2. User Authentication & Session Management
 
-**Description**: How existing users securely authenticate and access their personalized data within the application.
+**Description**: Authentication flow for returning users.
 
-**Steps**:
+![Login](./uml_diagrams/Login.png)
 
-1.  **User Enters Credentials**: The user provides their email and password in the login screen of the React Native app.
-2.  **Firebase Authentication**: The front-end authenticates with Firebase Auth services, which validates the credentials and returns an authentication token upon successful verification.
-3.  **Token Storage**: The app securely stores the authentication token in the device's secure storage for persistent sessions.
-4.  **Initial Data Retrieval**: The app immediately calls the `/api/users/signin` endpoint with the Firebase token in the Authorization header (Bearer scheme) to retrieve the user's profile and current fitness plan in a single request.
-5.  **Data Initialization**: Upon receiving the response containing both the user object and fitness plan, the app initializes the user's session state with their personalized data.
-6.  **Authenticated API Requests**: For all subsequent requests to protected endpoints, the app includes the token in the Authorization header using the Bearer scheme.
-7.  **Token Verification**: The AI Fitness API validates the Firebase token on each request using the authMiddleware before granting access to protected resources.
-8.  **Session Management**: The app monitors token expiration and automatically refreshes it when needed to maintain the user session.
-9.  **Secure Logout**: When the user logs out, the app clears the stored token and notifies Firebase Auth to invalidate the session.
+**Participants**: Mobile App, Firebase Auth, API Backend, MongoDB
+
+**Login Sequence**:
+
+1.  **Credential Entry**: User enters email/password in mobile app.
+2.  **Authentication**: Mobile app sends credentials to Firebase Auth. Firebase validates and returns a token.
+3.  **Token Storage**: Mobile app receives the token and stores it.
+4.  **User Data Request**: Mobile app calls `/api/users/signin` with token in Authorization header.
+5.  **Token Verification**: API backend verifies Firebase token with authMiddleware.
+6.  **Data Fetching**: API queries MongoDB for user profile and fitness plan using Firebase user ID.
+7.  **Response**: API returns combined user and fitness plan data to mobile app.
+8.  **Session Setup**: Mobile app initializes UI with received personalized data.
+
+**Ongoing Authentication**:
+
+1.  **Protected Requests**: Mobile app includes token in all API requests.
+2.  **Request Validation**: API verifies token before processing each request.
+3.  **Token Management**: Mobile app refreshes token before expiration.
+4.  **Logout**: On user logout, mobile app clears token and notifies Firebase.
 
 ### 4.3. Track Workout Completion
 
 **Description**: How a user marks a workout as completed and updates their progress.
+
+![Track Workout](./uml_diagrams/Track%20Workout.png)
 
 **Steps**:
 
@@ -189,6 +203,8 @@ These flows detail the sequence of user actions and system responses.
 ### 4.4. User Account Deletion
 
 **Description**: The process of a user permanently deleting their account and associated data.
+
+![Delete User](./uml_diagrams/Delete%20User.png)
 
 **Steps**:
 
