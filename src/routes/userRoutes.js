@@ -1,5 +1,9 @@
 import express from "express";
-import { onboardUser, regeneratePlan } from "../controllers/userController.js";
+import {
+  onboardUser,
+  regeneratePlan,
+  getCurrentUserProfile,
+} from "../controllers/userController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -77,5 +81,32 @@ router.post("/onboarding", authMiddleware, onboardUser);
  *         description: Server error
  */
 router.post("/regenerate-plan", authMiddleware, regeneratePlan);
+
+/**
+ * @swagger
+ * /users/profile:
+ *   get:
+ *     summary: Get current user profile with fitness plan
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     description: >
+ *       This endpoint retrieves the current user's profile information and associated fitness plan.
+ *       The user is identified by the Firebase token in the Authorization header.
+ *     responses:
+ *       200:
+ *         description: User profile retrieved successfully
+ *       content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserProfileResponse'
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *       404:
+ *         description: User profile not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/profile", authMiddleware, getCurrentUserProfile);
 
 export default router;

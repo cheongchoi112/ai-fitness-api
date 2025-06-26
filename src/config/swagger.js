@@ -158,6 +158,118 @@ const options = {
           type: "object",
           description: "Generated fitness plan",
         },
+        UserProfileResponse: {
+          type: "object",
+          properties: {
+            user: {
+              type: "object",
+              properties: {
+                _id: {
+                  type: "string",
+                  description: "MongoDB document ID",
+                },
+                firebaseUserId: {
+                  type: "string",
+                  description: "Firebase user ID",
+                },
+                userInfo: {
+                  type: "object",
+                  properties: {
+                    email: {
+                      type: "string",
+                      description: "User's email",
+                    },
+                  },
+                  additionalProperties: true,
+                },
+                profile: {
+                  $ref: "#/components/schemas/UserProfile",
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the user was created",
+                },
+                updatedAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the user was last updated",
+                },
+              },
+            },
+            fitnessPlan: {
+              type: "object",
+              properties: {
+                _id: {
+                  type: "string",
+                  description: "MongoDB document ID",
+                },
+                userId: {
+                  type: "string",
+                  description: "Firebase user ID",
+                },
+                plan: {
+                  type: "object",
+                  description: "Generated fitness plan",
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the plan was created",
+                },
+                updatedAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the plan was last updated",
+                },
+              },
+            },
+          },
+        },
+        UserProfile: {
+          type: "object",
+          description: "User profile information",
+          properties: {
+            personalGoalsExperience: {
+              type: "object",
+              properties: {
+                primaryFitnessGoal: {
+                  type: "string",
+                },
+                currentWeightLbs: {
+                  type: "number",
+                },
+                desiredWeightLbs: {
+                  type: "number",
+                },
+                heightCms: {
+                  type: "number",
+                },
+                currentFitnessLevel: {
+                  type: "string",
+                },
+                ageGroup: {
+                  type: "string",
+                },
+              },
+            },
+            scheduleAvailability: {
+              type: "object",
+            },
+            equipmentAccess: {
+              type: "object",
+            },
+            dietaryPreferences: {
+              type: "object",
+            },
+            healthConsiderations: {
+              type: "object",
+            },
+            preferencesMotivation: {
+              type: "object",
+            },
+          },
+        },
       },
       securitySchemes: {
         bearerAuth: {

@@ -173,7 +173,7 @@ These flows detail the sequence of user actions and system responses.
 1.  **Credential Entry**: User enters email/password in mobile app.
 2.  **Authentication**: Mobile app sends credentials to Firebase Auth. Firebase validates and returns a token.
 3.  **Token Storage**: Mobile app receives the token and stores it.
-4.  **User Data Request**: Mobile app calls `/api/users/signin` with token in Authorization header.
+4.  **User Data Request**: Mobile app calls `/api/users/profile` with token in Authorization header.
 5.  **Token Verification**: API backend verifies Firebase token with authMiddleware.
 6.  **Data Fetching**: API queries MongoDB for user profile and fitness plan using Firebase user ID.
 7.  **Response**: API returns combined user and fitness plan data to mobile app.
@@ -195,7 +195,7 @@ These flows detail the sequence of user actions and system responses.
 **Steps**:
 
 1.  **User Marks Workout Complete**: The user marks a workout as completed for a given day in the front-end.
-2.  **Submit Workout Completion**: The front-end sends an HTTP request to the back-end to record the completion.
+2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/users/markWorkoutComplete` to the back-end to record the completion.
 3.  **Record Progress**: The back-end adds the completion date to the `progress` list within the user's current `fitnessPlans` document in MongoDB.
 4.  **Confirm Update**: The back-end sends a success response to the front-end.
 5.  **Display Confirmation**: The front-end visually updates the completed workout.

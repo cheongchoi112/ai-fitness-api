@@ -2,6 +2,7 @@ import {
   createOrUpdateUserProfile,
   formatUserDataForAI,
   saveFitnessPlan,
+  getUserWithFitnessPlan,
 } from "../services/userService.js";
 import { generateContent as generateGeminiContent } from "../services/aiFitnessServiceGemini.js";
 
@@ -34,21 +35,48 @@ export const onboardUser = async (req, res) => {
         .json({ error: "Email in request does not match authenticated user" });
     }
 
-    console.log(`Onboarding user: ${userId}, email: ${userEmail}`);
+    console.log(
+      `Checking if user already exists: ${userId}, email: ${userEmail}`
+    );
+
+    // Check if user already exists with a fitness plan
+    const existingUserData = await getUserWithFitnessPlan(userId);
+
+    if (
+      existingUserData &&
+      existingUserData.user &&
+      existingUserData.fitnessPlan
+    ) {
+      console.log(`User already onboarded: ${userId}, returning existing data`);
+      return res.status(200).json({
+        message: "User already onboarded",
+        user: existingUserData.user,
+        fitnessPlan: existingUserData.fitnessPlan,
+      });
+    }
+
+    console.log(`Onboarding new user: ${userId}, email: ${userEmail}`);
 
     // Save user profile to MongoDB
     const savedUser = await createOrUpdateUserProfile(userId, userData);
 
     // Format user data for Gemini API
-    const aiRequestData = formatUserDataForAI(userData.profile);
-
-    // Generate personalized plan using Gemini
+    const aiRequestData = formatUserDataForAI(userData.profile); // Generate personalized plan using Gemini
     const generatedPlan = await generateGeminiContent(
       JSON.stringify(aiRequestData)
     );
 
     // Parse the generated plan
-    const parsedPlan = JSON.parse(generatedPlan);
+    let parsedPlan;
+    try {
+      parsedPlan = JSON.parse(generatedPlan);
+    } catch (parseError) {
+      console.error("Error parsing generated plan:", parseError);
+      return res.status(500).json({
+        error: "Failed to parse generated fitness plan",
+        rawResponse: generatedPlan.substring(0, 500) + "...", // Include partial raw response for debugging
+      });
+    }
 
     // Save plan to MongoDB
     const savedPlan = await saveFitnessPlan(userId, parsedPlan);
@@ -74,11 +102,16 @@ export const regeneratePlan = async (req, res) => {
     const userId = req.user.uid;
     const userEmail = req.user.email; // Email from Firebase token
 
-    // Get existing user profile
-    const userProfile = await findUserById(userId);
-    if (!userProfile) {
+    // Get existing user with fitness plan
+    const existingUserData = await getUserWithFitnessPlan(userId);
+
+    if (!existingUserData || !existingUserData.user) {
       return res.status(404).json({ error: "User not found" });
-    } // Additional verification: check if the user email matches the token email
+    }
+
+    const userProfile = existingUserData.user;
+
+    // Additional verification: check if the user email matches the token email
     if (
       userProfile.userInfo &&
       userProfile.userInfo.email &&
@@ -89,15 +122,22 @@ export const regeneratePlan = async (req, res) => {
       );
       // Still proceed with the request since userId is already verified
     } // Format user data for Gemini API
-    const aiRequestData = formatUserDataForAI(userProfile);
-
-    // Generate new personalized plan
+    const aiRequestData = formatUserDataForAI(userProfile); // Generate new personalized plan
     const generatedPlan = await generateGeminiContent(
       JSON.stringify(aiRequestData)
     );
 
     // Parse the generated plan
-    const parsedPlan = JSON.parse(generatedPlan);
+    let parsedPlan;
+    try {
+      parsedPlan = JSON.parse(generatedPlan);
+    } catch (parseError) {
+      console.error("Error parsing generated plan:", parseError);
+      return res.status(500).json({
+        error: "Failed to parse generated fitness plan",
+        rawResponse: generatedPlan.substring(0, 500) + "...", // Include partial raw response for debugging
+      });
+    }
 
     // Save or update plan in MongoDB
     const savedPlan = await saveFitnessPlan(userId, parsedPlan);
@@ -109,5 +149,33 @@ export const regeneratePlan = async (req, res) => {
   } catch (error) {
     console.error("Error regenerating fitness plan:", error);
     res.status(500).json({ error: "Failed to regenerate fitness plan" });
+  }
+};
+
+/**
+ * Get current user profile with fitness plan
+ * @route GET /api/users/profile
+ */
+export const getCurrentUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.uid; // Firebase user ID from auth middleware
+
+    console.log(`Getting profile for user: ${userId}`);
+
+    // Get user data with fitness plan
+    const userData = await getUserWithFitnessPlan(userId);
+
+    if (!userData || !userData.user) {
+      return res.status(404).json({ error: "User profile not found" });
+    }
+
+    // Return user profile and fitness plan
+    res.status(200).json({
+      user: userData.user,
+      fitnessPlan: userData.fitnessPlan,
+    });
+  } catch (error) {
+    console.error("Error getting user profile:", error);
+    res.status(500).json({ error: "Failed to retrieve user profile" });
   }
 };

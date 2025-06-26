@@ -149,3 +149,38 @@ export const saveFitnessPlan = async (userId, plan) => {
     throw error;
   }
 };
+
+/**
+ * Find a user by Firebase userId and retrieve their fitness plan
+ * @param {string} firebaseUserId - Firebase user ID
+ * @returns {Promise<Object|null>} User and fitness plan or null if not found
+ */
+export const getUserWithFitnessPlan = async (firebaseUserId) => {
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+    const usersCollection = db.collection(COLLECTION_NAME);
+    const plansCollection = db.collection("fitnessPlans");
+
+    // Find the user
+    const user = await usersCollection.findOne({ firebaseUserId });
+
+    if (!user) {
+      return null;
+    }
+
+    // Find the associated fitness plan
+    const fitnessPlan = await plansCollection.findOne({
+      userId: firebaseUserId,
+    });
+
+    // Return both user and fitness plan
+    return {
+      user,
+      fitnessPlan: fitnessPlan || null,
+    };
+  } catch (error) {
+    console.error("Error finding user with fitness plan:", error);
+    throw error;
+  }
+};
