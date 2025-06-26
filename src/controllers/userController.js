@@ -1,158 +1,113 @@
 import {
-  createUser,
-  findUserByCredentials,
-  findUserById,
-  updateUser,
-  deleteUser,
+  createOrUpdateUserProfile,
+  formatUserDataForAI,
+  saveFitnessPlan,
 } from "../services/userService.js";
+import { generateContent as generateGeminiContent } from "../services/aiFitnessServiceGemini.js";
 
 /**
- * Register a new user
- * @route POST /api/users/signup
+ * Process user onboarding and generate personalized fitness plan
+ * @route POST /api/users/onboarding
  */
-export const signup = async (req, res) => {
+export const onboardUser = async (req, res) => {
   try {
+    const userId = req.user.uid; // Firebase user ID from auth middleware
+    const userEmail = req.user.email; // Email from Firebase token
     const userData = req.body;
 
-    // Validate required fields
-    if (!userData.email || !userData.password) {
-      return res.status(400).json({ error: "Email and password are required" });
+    // Basic validation
+    if (!userData || !userData.userInfo || !userData.profile) {
+      return res
+        .status(400)
+        .json({ error: "User info and profile data are required" });
+    }
+    if (!userData.userInfo.email) {
+      return res.status(400).json({ error: "Email is required in userInfo" });
+    }
+    // Verify email matches the one in the token for security
+    if (userData.userInfo.email !== userEmail) {
+      console.warn(
+        `Email mismatch during onboarding: provided ${userData.userInfo.email}, token has ${userEmail}`
+      );
+      return res
+        .status(400)
+        .json({ error: "Email in request does not match authenticated user" });
     }
 
-    // Create user
-    const newUser = await createUser(userData);
+    console.log(`Onboarding user: ${userId}, email: ${userEmail}`);
 
-    // Remove password from response
-    const { password, ...userWithoutPassword } = newUser;
+    // Save user profile to MongoDB
+    const savedUser = await createOrUpdateUserProfile(userId, userData);
 
-    res.status(201).json({
-      message: "User created successfully",
-      user: userWithoutPassword,
-    });
-  } catch (error) {
-    console.error("Error in signup:", error);
-    if (error.message === "User with this email already exists") {
-      return res.status(409).json({ error: error.message });
-    }
-    res.status(500).json({ error: "Error creating user" });
-  }
-};
+    // Format user data for Gemini API
+    const aiRequestData = formatUserDataForAI(userData.profile);
 
-/**
- * Login user
- * @route POST /api/users/login
- */
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Validate required fields
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email and password are required" });
-    }
-
-    // Find user by credentials
-    const user = await findUserByCredentials(email, password);
-
-    if (!user) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    // Remove password from response
-    const { password: userPassword, ...userWithoutPassword } = user;
-
-    res.json({
-      message: "Login successful",
-      user: userWithoutPassword,
-    });
-  } catch (error) {
-    console.error("Error in login:", error);
-    res.status(500).json({ error: "Login failed" });
-  }
-};
-
-/**
- * Get current user
- * @route GET /api/users/:id
- */
-export const getUserById = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    console.log(`[getUserById] Attempting to find user with ID: ${userId}`);
-
-    try {
-      const user = await findUserById(userId);
-
-      if (!user) {
-        console.log(`[getUserById] User not found for ID: ${userId}`);
-        return res.status(404).json({ error: "User not found" });
-      }
-
-      // Remove password from response
-      const { password, ...userWithoutPassword } = user;
-      console.log(`[getUserById] Successfully found user: ${userId}`);
-
-      res.json(userWithoutPassword);
-    } catch (dbError) {
-      console.error(`[getUserById] Database error: ${dbError.message}`);
-      console.error(`[getUserById] Stack trace: ${dbError.stack}`);
-      if (dbError.name === "BSONTypeError") {
-        console.error("[getUserById] Invalid ObjectId format");
-        return res.status(400).json({ error: "Invalid user ID format" });
-      }
-      throw dbError; // Re-throw to be caught by the outer catch block
-    }
-  } catch (error) {
-    console.error(`[getUserById] Unhandled error: ${error.message}`);
-    console.error(`[getUserById] Error type: ${error.name}`);
-    console.error(`[getUserById] Stack trace: ${error.stack}`);
-    console.error(
-      `[getUserById] Request params: ${JSON.stringify(req.params)}`
+    // Generate personalized plan using Gemini
+    const generatedPlan = await generateGeminiContent(
+      JSON.stringify(aiRequestData)
     );
-    res.status(500).json({ error: "Error getting user" });
-  }
-};
 
-/**
- * Update user
- * @route PUT /api/users/:id
- */
-export const updateUserById = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const updateData = req.body;
+    // Parse the generated plan
+    const parsedPlan = JSON.parse(generatedPlan);
 
-    const updatedUser = await updateUser(userId, updateData);
+    // Save plan to MongoDB
+    const savedPlan = await saveFitnessPlan(userId, parsedPlan);
 
-    // Remove password from response
-    const { password, ...userWithoutPassword } = updatedUser;
-
-    res.json({
-      message: "User updated successfully",
-      user: userWithoutPassword,
+    // Return user profile and fitness plan
+    res.status(200).json({
+      message: "User onboarded successfully",
+      user: savedUser,
+      fitnessPlan: savedPlan,
     });
   } catch (error) {
-    console.error("Error updating user:", error);
-    res.status(500).json({ error: "Error updating user" });
+    console.error("Error in user onboarding:", error);
+    res.status(500).json({ error: "Failed to complete user onboarding" });
   }
 };
 
 /**
- * Delete user
- * @route DELETE /api/users/:id
+ * Regenerate fitness plan for existing user
+ * @route POST /api/users/regenerate-plan
  */
-export const deleteUserById = async (req, res) => {
+export const regeneratePlan = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const result = await deleteUser(userId);
+    const userId = req.user.uid;
+    const userEmail = req.user.email; // Email from Firebase token
 
-    if (!result) {
+    // Get existing user profile
+    const userProfile = await findUserById(userId);
+    if (!userProfile) {
       return res.status(404).json({ error: "User not found" });
-    }
+    } // Additional verification: check if the user email matches the token email
+    if (
+      userProfile.userInfo &&
+      userProfile.userInfo.email &&
+      userProfile.userInfo.email !== userEmail
+    ) {
+      console.warn(
+        `Email mismatch: ${userProfile.userInfo.email} vs ${userEmail}`
+      );
+      // Still proceed with the request since userId is already verified
+    } // Format user data for Gemini API
+    const aiRequestData = formatUserDataForAI(userProfile);
 
-    res.json({ message: "User deleted successfully" });
+    // Generate new personalized plan
+    const generatedPlan = await generateGeminiContent(
+      JSON.stringify(aiRequestData)
+    );
+
+    // Parse the generated plan
+    const parsedPlan = JSON.parse(generatedPlan);
+
+    // Save or update plan in MongoDB
+    const savedPlan = await saveFitnessPlan(userId, parsedPlan);
+
+    res.status(200).json({
+      message: "Fitness plan regenerated successfully",
+      fitnessPlan: savedPlan,
+    });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    res.status(500).json({ error: "Error deleting user" });
+    console.error("Error regenerating fitness plan:", error);
+    res.status(500).json({ error: "Failed to regenerate fitness plan" });
   }
 };

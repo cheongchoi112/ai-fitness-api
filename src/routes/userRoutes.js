@@ -1,138 +1,81 @@
 import express from "express";
-import {
-  signup,
-  login,
-  getUserById,
-  updateUserById,
-  deleteUserById,
-} from "../controllers/userController.js";
+import { onboardUser, regeneratePlan } from "../controllers/userController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 /**
  * @swagger
- * /users/signup:
+ * /users/onboarding:
  *   post:
- *     summary: Register a new user
+ *     summary: Process user onboarding with profile and preferences
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     description: >
+ *       This endpoint accepts user profile data for onboarding. The userInfo object
+ *       must contain the email field, but can include any other optional properties.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: User created successfully
- *       400:
- *         description: Invalid input data
- *       409:
- *         description: User already exists
- */
-router.post("/signup", signup);
-
-/**
- * @swagger
- * /users/login:
- *   post:
- *     summary: Login user
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *             required:
- *               - email
- *               - password
+ *             $ref: '#/components/schemas/UserOnboarding'
+ *           example:
+ *             userInfo:
+ *               email: "john.doe@example.com"
+ *               firstName: "John"
+ *               lastName: "Doe"
+ *             profile:
+ *               personalGoalsExperience:
+ *                 primaryFitnessGoal: "Build muscle"
+ *                 currentWeightLbs: 180
+ *                 desiredWeightLbs: 170
+ *                 heightCms: 175
+ *                 currentFitnessLevel: "Intermediate"
+ *                 ageGroup: "25-34"
+ *               scheduleAvailability:
+ *                 daysPerWeekWorkout: "3-4"
+ *                 preferredWorkoutTimes: "Evening"
+ *               equipmentAccess:
+ *                 equipment: ["Dumbbells", "Resistance bands"]
+ *                 location: "Home"
+ *               dietaryPreferences:
+ *                 primaryDietaryPreference: "High-protein"
+ *                 restrictionsAllergies: ["Gluten-free"]
+ *               healthConsiderations:
+ *                 medicalConditions: "None"
+ *                 workoutsToAvoid: ["High-impact"]
+ *               preferencesMotivation:
+ *                 enjoyedWorkoutTypes: ["Strength training", "HIIT"]
  *     responses:
  *       200:
- *         description: Login successful
+ *         description: User onboarded successfully with fitness plan
  *       401:
- *         description: Invalid credentials
+ *         description: Unauthorized - Invalid token
+ *       500:
+ *         description: Server error
  */
-router.post("/login", login);
+router.post("/onboarding", authMiddleware, onboardUser);
 
 /**
  * @swagger
- * /users/{id}:
- *   get:
- *     summary: Get user by ID
+ * /users/regenerate-plan:
+ *   post:
+ *     summary: Regenerate fitness plan for existing user
  *     tags: [Users]
  *     security:
- *       - firebaseAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: User ID
+ *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: User data
+ *         description: New fitness plan generated successfully
+ *       401:
+ *         description: Unauthorized - Invalid token
  *       404:
  *         description: User not found
+ *       500:
+ *         description: Server error
  */
-router.get("/:id", authMiddleware, getUserById);
-
-/**
- * @swagger
- * /users/{id}:
- *   put:
- *     summary: Update user information
- *     tags: [Users]
- *     security:
- *       - firebaseAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: User ID
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *     responses:
- *       200:
- *         description: User updated
- *       404:
- *         description: User not found
- */
-router.put("/:id", authMiddleware, updateUserById);
-
-/**
- * @swagger
- * /users/{id}:
- *   delete:
- *     summary: Delete user
- *     tags: [Users]
- *     security:
- *       - firebaseAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: User ID
- *     responses:
- *       200:
- *         description: User deleted
- *       404:
- *         description: User not found
- */
-router.delete("/:id", authMiddleware, deleteUserById);
+router.post("/regenerate-plan", authMiddleware, regeneratePlan);
 
 export default router;
