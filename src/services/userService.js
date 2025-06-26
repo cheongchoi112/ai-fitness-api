@@ -184,3 +184,43 @@ export const getUserWithFitnessPlan = async (firebaseUserId) => {
     throw error;
   }
 };
+
+/**
+ * Delete user data from both users and fitnessPlans collections
+ * @param {string} firebaseUserId - Firebase user ID
+ * @returns {Promise<Object>} Result of deletion operation
+ */
+export const deleteUser = async (firebaseUserId) => {
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+    const usersCollection = db.collection(COLLECTION_NAME);
+    const plansCollection = db.collection("fitnessPlans");
+
+    // Check if user exists before attempting deletion
+    const user = await usersCollection.findOne({ firebaseUserId });
+    if (!user) {
+      return { userFound: false, message: "User not found" };
+    }
+
+    // Delete user from users collection
+    const userDeleteResult = await usersCollection.deleteOne({
+      firebaseUserId,
+    });
+
+    // Delete associated fitness plan
+    const planDeleteResult = await plansCollection.deleteOne({
+      userId: firebaseUserId,
+    });
+
+    return {
+      userFound: true,
+      userDeleted: userDeleteResult.deletedCount > 0,
+      planDeleted: planDeleteResult.deletedCount > 0,
+      message: "User data deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting user data:", error);
+    throw error;
+  }
+};

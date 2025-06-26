@@ -3,6 +3,7 @@ import {
   formatUserDataForAI,
   saveFitnessPlan,
   getUserWithFitnessPlan,
+  deleteUser,
 } from "../services/userService.js";
 import { generateContent as generateGeminiContent } from "../services/aiFitnessServiceGemini.js";
 
@@ -177,5 +178,41 @@ export const getCurrentUserProfile = async (req, res) => {
   } catch (error) {
     console.error("Error getting user profile:", error);
     res.status(500).json({ error: "Failed to retrieve user profile" });
+  }
+};
+
+/**
+ * Delete user account and all associated data
+ * @route DELETE /api/users/delete
+ */
+export const deleteUserAccount = async (req, res) => {
+  try {
+    const userId = req.user.uid; // Firebase user ID from auth middleware
+    const userEmail = req.user.email; // Email from Firebase token
+
+    console.log(
+      `Attempting to delete user account: ${userId}, email: ${userEmail}`
+    );
+
+    // Delete user data from MongoDB (both users and fitnessPlans collections)
+    const deleteResult = await deleteUser(userId);
+
+    if (!deleteResult.userFound) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "User account data deleted successfully",
+      userDeleted: deleteResult.userDeleted,
+      planDeleted: deleteResult.planDeleted,
+    });
+
+    // Note: This endpoint only deletes the user's data from MongoDB
+    // To completely delete the Firebase Authentication account,
+    // the client would need to make a separate request to Firebase Authentication API
+    // or you would need to implement Firebase Admin SDK functionality to delete the auth account
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    res.status(500).json({ error: "Failed to delete user account" });
   }
 };

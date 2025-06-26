@@ -3,6 +3,7 @@ import {
   onboardUser,
   regeneratePlan,
   getCurrentUserProfile,
+  deleteUserAccount,
 } from "../controllers/userController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
@@ -108,5 +109,43 @@ router.post("/regenerate-plan", authMiddleware, regeneratePlan);
  *         description: Server error
  */
 router.get("/profile", authMiddleware, getCurrentUserProfile);
+
+/**
+ * @swagger
+ * /users/delete:
+ *   delete:
+ *     summary: Delete user account and all associated data
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     description: >
+ *       This endpoint deletes the user's data from both the users and fitnessPlans collections in MongoDB.
+ *       The user is identified by the Firebase token in the Authorization header.
+ *       Note: This only deletes data from MongoDB and not the Firebase Authentication account itself.
+ *     responses:
+ *       200:
+ *         description: User data deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User account data deleted successfully
+ *                 userDeleted:
+ *                   type: boolean
+ *                   description: Whether user data was deleted from users collection
+ *                 planDeleted:
+ *                   type: boolean
+ *                   description: Whether user data was deleted from fitnessPlans collection
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+router.delete("/delete", authMiddleware, deleteUserAccount);
 
 export default router;
