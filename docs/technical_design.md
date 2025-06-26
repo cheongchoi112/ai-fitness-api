@@ -188,14 +188,14 @@ These flows detail the sequence of user actions and system responses.
 
 ### 4.3. Track Workout Completion
 
-**Description**: How a user marks a workout as completed and updates their progress.
+**Description**: How a user marks/unmarks a workout as completed and updates their progress.
 
 ![Track Workout](./uml_diagrams/Track%20Workout.png)
 
 **Steps**:
 
-1.  **User Marks Workout Complete**: The user marks a workout as completed for a given day in the front-end.
-2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/users/markWorkoutComplete` to the back-end to record the completion.
+1.  **User Marks Workout Complete**: The user marks/unmarks a workout as completed for a given day in the front-end.
+2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/fitness/mark-workout` to the back-end to record the completion.
 3.  **Record Progress**: The back-end adds the completion date to the `progress` list within the user's current `fitnessPlans` document in MongoDB.
 4.  **Confirm Update**: The back-end sends a success response to the front-end.
 5.  **Display Confirmation**: The front-end visually updates the completed workout.

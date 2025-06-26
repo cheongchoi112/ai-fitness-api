@@ -158,6 +158,50 @@ const options = {
           type: "object",
           description: "Generated fitness plan",
         },
+        WorkoutCompletionResponse: {
+          type: "object",
+          properties: {
+            message: {
+              type: "string",
+              description: "Success message",
+            },
+            updatedPlan: {
+              type: "object",
+              properties: {
+                _id: {
+                  type: "string",
+                  description: "MongoDB document ID",
+                },
+                userId: {
+                  type: "string",
+                  description: "Firebase user ID",
+                },
+                plan: {
+                  type: "object",
+                  description: "Generated fitness plan",
+                },
+                progress: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    format: "date-time",
+                  },
+                  description: "List of dates when workouts were completed",
+                },
+                createdAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the plan was created",
+                },
+                updatedAt: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Timestamp when the plan was last updated",
+                },
+              },
+            },
+          },
+        },
         UserProfileResponse: {
           type: "object",
           properties: {
