@@ -1,10 +1,10 @@
 import {
   createOrUpdateUserProfile,
   formatUserDataForAI,
-  saveFitnessPlan,
   getUserWithFitnessPlan,
   deleteUser,
 } from "../services/userService.js";
+import { saveFitnessPlan } from "../services/fitnessService.js";
 import { generateContent as generateGeminiContent } from "../services/aiFitnessServiceGemini.js";
 
 /**

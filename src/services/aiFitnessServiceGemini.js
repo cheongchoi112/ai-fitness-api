@@ -24,7 +24,7 @@ async function generateContent(userInput = null) {
       },
     ],
   };
-  const model = "gemini-2.5-flash-preview-05-20";
+  const model = "gemini-2.5-flash-lite-preview-06-17";
 
   const contents = [
     {
@@ -37,7 +37,7 @@ async function generateContent(userInput = null) {
     },
   ];
 
-  console.log("Sending request to Gemini API...");
+  console.log(`Sending request to Gemini API ${model}...`);
   const response = await ai.models.generateContentStream({
     model,
     config,
@@ -48,7 +48,6 @@ async function generateContent(userInput = null) {
   for await (const chunk of response) {
     if (chunk.text) {
       fullResponse += chunk.text;
-      process.stdout.write(chunk.text);
     }
   }
   console.log("\nGemini API response complete!");
