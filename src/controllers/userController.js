@@ -1,6 +1,5 @@
 import {
   createOrUpdateUserProfile,
-  formatUserDataForAI,
   getUserWithFitnessPlan,
   deleteUser,
 } from "../services/userService.js";
@@ -59,13 +58,8 @@ export const onboardUser = async (req, res) => {
     console.log(`Onboarding new user: ${userId}, email: ${userEmail}`);
 
     // Save user profile to MongoDB
-    const savedUser = await createOrUpdateUserProfile(userId, userData);
-
-    // Format user data for Gemini API
-    const aiRequestData = formatUserDataForAI(userData.profile); // Generate personalized plan using Gemini
-    const generatedPlan = await generateGeminiContent(
-      JSON.stringify(aiRequestData)
-    );
+    const savedUser = await createOrUpdateUserProfile(userId, userData); // Generate personalized plan using Gemini
+    const generatedPlan = await generateGeminiContent(userData.profile);
 
     // Parse the generated plan
     let parsedPlan;
@@ -122,11 +116,10 @@ export const regeneratePlan = async (req, res) => {
         `Email mismatch: ${userProfile.userInfo.email} vs ${userEmail}`
       );
       // Still proceed with the request since userId is already verified
-    } // Format user data for Gemini API
-    const aiRequestData = formatUserDataForAI(userProfile); // Generate new personalized plan
-    const generatedPlan = await generateGeminiContent(
-      JSON.stringify(aiRequestData)
-    );
+    }
+
+    // Generate new personalized plan directly using the profile
+    const generatedPlan = await generateGeminiContent(userProfile);
 
     // Parse the generated plan
     let parsedPlan;

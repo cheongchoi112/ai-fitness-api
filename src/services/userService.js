@@ -60,49 +60,7 @@ export const createOrUpdateUserProfile = async (userId, userData) => {
   }
 };
 
-/**
- * Format user data for AI request
- * @param {Object} userData - User profile data
- * @returns {Object} Formatted data for AI service
- */
-export const formatUserDataForAI = (userData) => {
-  // Map user profile data to the format expected by Gemini API
-  // Extract profile data if it's passed as a full user object
-  const profile = userData.profile || userData;
-
-  return {
-    personal_goals_experience: {
-      primary_fitness_goal: profile.personalGoalsExperience?.primaryFitnessGoal,
-      current_weight_lbs: profile.personalGoalsExperience?.currentWeightLbs,
-      desired_weight_lbs: profile.personalGoalsExperience?.desiredWeightLbs,
-      height_cms: profile.personalGoalsExperience?.heightCms,
-      current_fitness_level:
-        profile.personalGoalsExperience?.currentFitnessLevel,
-      age_group: profile.personalGoalsExperience?.ageGroup,
-    },
-    schedule_availability: {
-      days_per_week_workout: profile.scheduleAvailability?.daysPerWeekWorkout,
-      preferred_workout_time:
-        profile.scheduleAvailability?.preferredWorkoutTimes,
-    },
-    equipment_access: {
-      equipment: profile.equipmentAccess?.equipment,
-      workout_location: profile.equipmentAccess?.location,
-    },
-    dietary_preferences: {
-      primary_dietary_preference:
-        profile.dietaryPreferences?.primaryDietaryPreference,
-      restrictions_allergies: profile.dietaryPreferences?.restrictionsAllergies,
-    },
-    health_considerations: {
-      injuries_conditions: profile.healthConsiderations?.medicalConditions,
-      workout_types_to_avoid: profile.healthConsiderations?.workoutsToAvoid,
-    },
-    preferences_motivation: {
-      enjoyed_workout_types: profile.preferencesMotivation?.enjoyedWorkoutTypes,
-    },
-  };
-};
+// formatUserDataForAI function has been moved to aiFitnessServiceGemini.js
 
 // saveFitnessPlan function has been moved to fitnessService.js
 
