@@ -40,112 +40,7 @@ const options = {
               required: ["email"],
             },
             profile: {
-              type: "object",
-              properties: {
-                personalGoalsExperience: {
-                  type: "object",
-                  properties: {
-                    primaryFitnessGoal: {
-                      type: "string",
-                      description: "User's primary fitness goal",
-                    },
-                    currentWeightLbs: {
-                      type: "number",
-                      description: "User's current weight in pounds",
-                    },
-                    desiredWeightLbs: {
-                      type: "number",
-                      description: "User's desired weight in pounds",
-                    },
-                    heightCms: {
-                      type: "number",
-                      description: "User's height in centimeters",
-                    },
-                    currentFitnessLevel: {
-                      type: "string",
-                      description: "User's current fitness level",
-                    },
-                    ageGroup: {
-                      type: "string",
-                      description: "User's age group",
-                    },
-                  },
-                },
-                scheduleAvailability: {
-                  type: "object",
-                  properties: {
-                    daysPerWeekWorkout: {
-                      type: "string",
-                      description:
-                        "Number of days per week available for workout",
-                    },
-                    preferredWorkoutTimes: {
-                      type: "string",
-                      description: "Preferred times of day for workouts",
-                    },
-                  },
-                },
-                equipmentAccess: {
-                  type: "object",
-                  properties: {
-                    equipment: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                      description: "List of available equipment",
-                    },
-                    location: {
-                      type: "string",
-                      description: "Workout location",
-                    },
-                  },
-                },
-                dietaryPreferences: {
-                  type: "object",
-                  properties: {
-                    primaryDietaryPreference: {
-                      type: "string",
-                      description: "Primary dietary preference",
-                    },
-                    restrictionsAllergies: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                      description: "List of dietary restrictions and allergies",
-                    },
-                  },
-                },
-                healthConsiderations: {
-                  type: "object",
-                  properties: {
-                    medicalConditions: {
-                      type: "string",
-                      description: "Any medical conditions affecting workouts",
-                    },
-                    workoutsToAvoid: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                      description: "Types of workouts to avoid",
-                    },
-                  },
-                },
-                preferencesMotivation: {
-                  type: "object",
-                  properties: {
-                    enjoyedWorkoutTypes: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                      description: "Types of workouts the user enjoys",
-                    },
-                  },
-                },
-              },
+              $ref: "#/components/schemas/UserProfile",
             },
           },
           required: ["userInfo", "profile"],
@@ -274,43 +169,98 @@ const options = {
           type: "object",
           description: "User profile information",
           properties: {
-            personalGoalsExperience: {
-              type: "object",
-              properties: {
-                primaryFitnessGoal: {
-                  type: "string",
-                },
-                currentWeightLbs: {
-                  type: "number",
-                },
-                desiredWeightLbs: {
-                  type: "number",
-                },
-                heightCms: {
-                  type: "number",
-                },
-                currentFitnessLevel: {
-                  type: "string",
-                },
-                ageGroup: {
-                  type: "string",
-                },
+            fitnessGoals: {
+              type: "array",
+              items: {
+                type: "string",
               },
+              description: "User's fitness goals",
+              example: ["Build muscle", "Lose weight"],
             },
-            scheduleAvailability: {
-              type: "object",
+            currentWeight: {
+              type: "string",
+              description: "User's current weight in pounds",
+              example: "200",
             },
-            equipmentAccess: {
-              type: "object",
+            desiredWeight: {
+              type: "string",
+              description: "User's desired weight in pounds",
+              example: "180",
+            },
+            height: {
+              type: "string",
+              description: "User's height in inches",
+              example: "74",
+            },
+            fitnessLevel: {
+              type: "string",
+              description: "User's current fitness level",
+              example: "Intermediate",
+            },
+            ageGroup: {
+              type: "string",
+              description: "User's age group",
+              example: "25-34",
+            },
+            workoutDaysPerWeek: {
+              type: "number",
+              description: "Number of days per week available for workout",
+              example: 4,
+            },
+            preferredWorkoutTime: {
+              type: "string",
+              description: "Preferred time of day for workouts",
+              example: "Midday",
+            },
+            availableEquipment: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              description: "List of available equipment",
+              example: ["Dumbbells"],
             },
             dietaryPreferences: {
-              type: "object",
+              type: "array",
+              items: {
+                type: "string",
+              },
+              description: "List of dietary preferences",
+              example: ["No preference"],
+            },
+            dietaryRestrictions: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              description: "List of dietary restrictions",
+              example: [],
+            },
+            otherRestrictions: {
+              type: "string",
+              description: "Other restrictions as free text",
+              example: "",
             },
             healthConsiderations: {
-              type: "object",
+              type: "string",
+              description: "Health considerations affecting workouts",
+              example: "",
             },
-            preferencesMotivation: {
-              type: "object",
+            enjoyedWorkouts: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              description: "Types of workouts the user enjoys",
+              example: ["HIIT", "Strength Training"],
+            },
+            workoutsToAvoid: {
+              type: "array",
+              items: {
+                type: "string",
+              },
+              description: "Types of workouts to avoid",
+              example: [],
             },
           },
         },

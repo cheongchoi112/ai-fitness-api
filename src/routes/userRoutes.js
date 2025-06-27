@@ -32,27 +32,21 @@ const router = express.Router();
  *               firstName: "John"
  *               lastName: "Doe"
  *             profile:
- *               personalGoalsExperience:
- *                 primaryFitnessGoal: "Build muscle"
- *                 currentWeightLbs: 180
- *                 desiredWeightLbs: 170
- *                 heightCms: 175
- *                 currentFitnessLevel: "Intermediate"
- *                 ageGroup: "25-34"
- *               scheduleAvailability:
- *                 daysPerWeekWorkout: "3-4"
- *                 preferredWorkoutTimes: "Evening"
- *               equipmentAccess:
- *                 equipment: ["Dumbbells", "Resistance bands"]
- *                 location: "Home"
- *               dietaryPreferences:
- *                 primaryDietaryPreference: "High-protein"
- *                 restrictionsAllergies: ["Gluten-free"]
- *               healthConsiderations:
- *                 medicalConditions: "None"
- *                 workoutsToAvoid: ["High-impact"]
- *               preferencesMotivation:
- *                 enjoyedWorkoutTypes: ["Strength training", "HIIT"]
+ *               fitnessGoals: ["Build muscle"]
+ *               currentWeight: "200"
+ *               desiredWeight: "180"
+ *               height: "74"
+ *               fitnessLevel: "Intermediate"
+ *               ageGroup: "25-34"
+ *               workoutDaysPerWeek: 4
+ *               preferredWorkoutTime: "Midday"
+ *               availableEquipment: ["Dumbbells"]
+ *               dietaryPreferences: ["No preference"]
+ *               dietaryRestrictions: []
+ *               otherRestrictions: ""
+ *               healthConsiderations: ""
+ *               enjoyedWorkouts: ["HIIT", "Strength Training"]
+ *               workoutsToAvoid: []
  *     responses:
  *       200:
  *         description: User onboarded successfully with fitness plan
@@ -97,7 +91,7 @@ router.post("/regenerate-plan", authMiddleware, regeneratePlan);
  *     responses:
  *       200:
  *         description: User profile retrieved successfully
- *       content:
+ *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/UserProfileResponse'

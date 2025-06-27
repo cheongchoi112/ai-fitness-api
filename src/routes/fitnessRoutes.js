@@ -29,58 +29,6 @@ router.post("/echo", echoData);
 
 /**
  * @swagger
- * /fitness/vertexai:
- *   post:
- *     summary: Generate fitness plan using Vertex AI
- *     tags: [Fitness]
- *     security:
- *       - firebaseAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/FitnessRequest'
- *     responses:
- *       200:
- *         description: Generated fitness plan
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/FitnessResponse'
- *       500:
- *         description: Error generating plan
- */
-router.post("/vertexai", authMiddleware, generateVertexAiFitnessPlan);
-
-/**
- * @swagger
- * /fitness/gemini:
- *   post:
- *     summary: Generate fitness plan using Gemini
- *     tags: [Fitness]
- *     security:
- *       - firebaseAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/FitnessRequest'
- *     responses:
- *       200:
- *         description: Generated fitness plan
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/FitnessResponse'
- *       500:
- *         description: Error generating plan
- */
-router.post("/gemini", authMiddleware, generateGeminiFitnessPlan);
-
-/**
- * @swagger
  * /fitness/mark-workout:
  *   post:
  *     summary: Mark or unmark a workout as complete for a specific date

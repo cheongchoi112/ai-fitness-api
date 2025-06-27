@@ -50,33 +50,21 @@ This collection stores core user information, including authentication details a
     "email": "<String>" // Should match the email used in Firebase Auth
   },
   "profile": {          // Stores user's personal and preference data from the survey.
-    "personalGoalsExperience": {
-      "primaryFitnessGoal": "<String>",
-      "currentWeightLbs": "<Number>",
-      "desiredWeightLbs": "<Number>",
-      "heightCms": "<Number>",
-      "currentFitnessLevel": "<String>",
-      "ageGroup": "<String>"
-    },
-    "scheduleAvailability": {
-      "daysPerWeekWorkout": "<String>",
-      "preferredWorkoutTimes": "<String>"
-    },
-    "equipmentAccess": {
-      "equipment": ,
-      "location": "<String>"
-    },
-    "dietaryPreferences": {
-      "primaryDietaryPreference": "<String>",
-      "restrictionsAllergies":
-    },
-    "healthConsiderations": {
-      "medicalConditions": "<String>",
-      "workoutsToAvoid":
-    },
-    "preferencesMotivation": {
-      "enjoyedWorkoutTypes":
-    }
+    "fitnessGoals": ["<String>"], // Array of fitness goals e.g. ["Build muscle", "Lose weight"]
+    "currentWeight": "<String>", // Current weight in pounds as a string
+    "desiredWeight": "<String>", // Desired weight in pounds as a string
+    "height": "<String>", // Height in inches as a string
+    "fitnessLevel": "<String>", // e.g. "Beginner", "Intermediate", "Advanced"
+    "ageGroup": "<String>", // e.g. "18-24", "25-34", "35-44"
+    "workoutDaysPerWeek": "<Number>", // Number of days per week user can work out
+    "preferredWorkoutTime": "<String>", // e.g. "Morning", "Midday", "Evening"
+    "availableEquipment": ["<String>"], // Array of available equipment
+    "dietaryPreferences": ["<String>"], // Array of dietary preferences
+    "dietaryRestrictions": ["<String>"], // Array of dietary restrictions
+    "otherRestrictions": "<String>", // Any other restrictions as free text
+    "healthConsiderations": "<String>", // Any health considerations as free text
+    "enjoyedWorkouts": ["<String>"], // Array of workout types the user enjoys
+    "workoutsToAvoid": ["<String>"] // Array of workout types to avoid
   },
   "createdAt": "<Date>", // Timestamp for user creation.
   "updatedAt": "<Date>"  // Timestamp for last profile update.
