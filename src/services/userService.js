@@ -11,118 +11,130 @@ const COLLECTION_NAME = "users";
 const client = new MongoClient(MONGODB_URI);
 
 /**
- * Create a new user
- * @param {Object} userData - User data to insert
- * @returns {Promise<Object>} Created user object
+ * Create or update user profile with onboarding data
+ * @param {string} userId - Firebase user ID
+ * @param {Object} userData - User data including userInfo and profile
+ * @returns {Promise<Object>} Updated user object
  */
-export const createUser = async (userData) => {
+export const createOrUpdateUserProfile = async (userId, userData) => {
   try {
     await client.connect();
     const db = client.db(DB_NAME);
     const usersCollection = db.collection(COLLECTION_NAME);
 
-    // Check if user with same email already exists
+    // Check if user already exists
     const existingUser = await usersCollection.findOne({
-      email: userData.email,
+      firebaseUserId: userId,
     });
+
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      // Update existing user
+      const result = await usersCollection.updateOne(
+        { firebaseUserId: userId },
+        {
+          $set: {
+            userInfo: userData.userInfo,
+            profile: userData.profile,
+            updatedAt: new Date(),
+          },
+        }
+      );
+
+      return await usersCollection.findOne({ firebaseUserId: userId });
+    } else {
+      // Create new user
+      const newUser = {
+        firebaseUserId: userId,
+        userInfo: userData.userInfo,
+        profile: userData.profile,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const result = await usersCollection.insertOne(newUser);
+      return newUser;
+    }
+  } catch (error) {
+    console.error("Error creating/updating user profile:", error);
+    throw error;
+  }
+};
+
+// formatUserDataForAI function has been moved to aiFitnessServiceGemini.js
+
+// saveFitnessPlan function has been moved to fitnessService.js
+
+/**
+ * Find a user by Firebase userId and retrieve their fitness plan
+ * @param {string} firebaseUserId - Firebase user ID
+ * @returns {Promise<Object|null>} User and fitness plan or null if not found
+ */
+export const getUserWithFitnessPlan = async (firebaseUserId) => {
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+    const usersCollection = db.collection(COLLECTION_NAME);
+    const plansCollection = db.collection("fitnessPlans");
+
+    // Find the user
+    const user = await usersCollection.findOne({ firebaseUserId });
+
+    if (!user) {
+      return null;
     }
 
-    // Add creation timestamp
-    const userToInsert = {
-      ...userData,
-      createdAt: new Date(),
-    };
-
-    const result = await usersCollection.insertOne(userToInsert);
-    return { ...userToInsert, _id: result.insertedId };
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Find user by email and password for login
- * @param {string} email - User email
- * @param {string} password - User password (plain text as per requirements)
- * @returns {Promise<Object|null>} User object or null if not found
- */
-export const findUserByCredentials = async (email, password) => {
-  try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const usersCollection = db.collection(COLLECTION_NAME);
-
-    // Find user by email and password
-    return await usersCollection.findOne({ email, password });
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Find user by ID
- * @param {string} userId - User ID
- * @returns {Promise<Object|null>} User object or null if not found
- */
-export const findUserById = async (userId) => {
-  try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const usersCollection = db.collection(COLLECTION_NAME);
-
-    // Convert string ID to MongoDB ObjectId
-    return await usersCollection.findOne({ _id: new ObjectId(userId) });
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Update user data
- * @param {string} userId - User ID
- * @param {Object} updateData - Data to update
- * @returns {Promise<Object>} Updated user
- */
-export const updateUser = async (userId, updateData) => {
-  try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const usersCollection = db.collection(COLLECTION_NAME);
-
-    const result = await usersCollection.findOneAndUpdate(
-      { _id: new ObjectId(userId) },
-      { $set: { ...updateData, updatedAt: new Date() } },
-      { returnDocument: "after" }
-    );
-
-    if (!result) {
-      throw new Error("User not found");
-    }
-
-    return result;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/**
- * Delete user by ID
- * @param {string} userId - User ID
- * @returns {Promise<boolean>} Success status
- */
-export const deleteUser = async (userId) => {
-  try {
-    await client.connect();
-    const db = client.db(DB_NAME);
-    const usersCollection = db.collection(COLLECTION_NAME);
-
-    const result = await usersCollection.deleteOne({
-      _id: new ObjectId(userId),
+    // Find the associated fitness plan
+    const fitnessPlan = await plansCollection.findOne({
+      userId: firebaseUserId,
     });
-    return result.deletedCount > 0;
+
+    // Return both user and fitness plan
+    return {
+      user,
+      fitnessPlan: fitnessPlan || null,
+    };
   } catch (error) {
+    console.error("Error finding user with fitness plan:", error);
+    throw error;
+  }
+};
+
+/**
+ * Delete user data from both users and fitnessPlans collections
+ * @param {string} firebaseUserId - Firebase user ID
+ * @returns {Promise<Object>} Result of deletion operation
+ */
+export const deleteUser = async (firebaseUserId) => {
+  try {
+    await client.connect();
+    const db = client.db(DB_NAME);
+    const usersCollection = db.collection(COLLECTION_NAME);
+    const plansCollection = db.collection("fitnessPlans");
+
+    // Check if user exists before attempting deletion
+    const user = await usersCollection.findOne({ firebaseUserId });
+    if (!user) {
+      return { userFound: false, message: "User not found" };
+    }
+
+    // Delete user from users collection
+    const userDeleteResult = await usersCollection.deleteOne({
+      firebaseUserId,
+    });
+
+    // Delete associated fitness plan
+    const planDeleteResult = await plansCollection.deleteOne({
+      userId: firebaseUserId,
+    });
+
+    return {
+      userFound: true,
+      userDeleted: userDeleteResult.deletedCount > 0,
+      planDeleted: planDeleteResult.deletedCount > 0,
+      message: "User data deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting user data:", error);
     throw error;
   }
 };

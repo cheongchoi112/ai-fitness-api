@@ -13,32 +13,31 @@ Input Specification:
 You will receive the user's completed survey data as a single JSON object. This object will contain key-value pairs where the keys generally correspond to the survey questions or sections, and the values are the user's responses.
 Input JSON Schema:
 The input JSON should adhere to the following schema, reflecting the questions in the "Fitness Goals and Preferences Survey":
-{
-  "personal_goals_experience": {
+{  "personal_goals_experience": {
     "primary_fitness_goal": "string", // e.g., "Lose weight", "Build muscle", etc.
     "current_weight_lbs": "number",
     "desired_weight_lbs": "number",
-    "height_cms": "number",
+    "height_inches": "number",
     "current_fitness_level": "string", // e.g., "Beginner", "Intermediate", "Advanced"
     "age_group": "string" // e.g., "18-24", "25-34", etc. (Optional)
   },
   "schedule_availability": {
-    "days_per_week_workout": "string", // e.g., "1-2", "3-4", "5-6", "7"
+    "days_per_week_workout": "number", // e.g., 1, 3, 5, 7
     "preferred_workout_time": "string" // e.g., "Morning", "Midday", "Evening", "No preference"
   },
   "equipment_access": {
-    "equipment": ["string"], // Array of strings, e.g., ["Dumbbells", "Resistance bands", "Full gym access"]
-    "workout_location": "string" // e.g., "At home", "At the gym", "Outdoors", "A mix of locations"
+    "equipment": ["string"] // Array of strings, e.g., ["Dumbbells", "Resistance bands", "Full gym access"]
   },
   "dietary_preferences": {
     "primary_dietary_preference": "string", // e.g., "No preference", "Vegetarian", "Vegan", etc.
-    "dietary_restrictions_allergies": ["string"] // Array of strings, e.g., ["Gluten-free", "Dairy-free", "Nut-free", "Other: specify here"] or empty array if none
+    "dietary_restrictions": ["string"], // Array of strings, e.g., ["Gluten-free", "Dairy-free", "Nut-free"] or empty array if none
+    "other_restrictions": "string" // Additional restrictions as free text
   },
   "health_considerations": {
-    "injuries_medical_conditions": "string", // User input from open text field, or "No"
-    "avoid_workout_types": ["string"] // Array of strings, e.g., ["High-impact", "Heavy lifting", "Long cardio sessions"] or empty array if no restrictions
+    "health_considerations": "string", // User input from open text field, or "None"
+    "workout_types_to_avoid": ["string"] // Array of strings, e.g., ["High-impact", "Heavy lifting", "Long cardio sessions"] or empty array if no restrictions
   },
-   "preferences_motivation": {
+  "preferences_motivation": {
     "enjoyed_workout_types": ["string"] // Array of strings, e.g., ["Strength training", "HIIT", "Yoga/Pilates", "Cardio"]
   }
 }

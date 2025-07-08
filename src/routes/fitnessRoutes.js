@@ -3,6 +3,7 @@ import {
   echoData,
   generateVertexAiFitnessPlan,
   generateGeminiFitnessPlan,
+  markWorkoutComplete,
 } from "../controllers/fitnessController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
@@ -28,54 +29,48 @@ router.post("/echo", echoData);
 
 /**
  * @swagger
- * /fitness/vertexai:
+ * /fitness/mark-workout:
  *   post:
- *     summary: Generate fitness plan using Vertex AI
+ *     summary: Mark or unmark a workout as complete for a specific date
  *     tags: [Fitness]
  *     security:
- *       - firebaseAuth: []
+ *       - bearerAuth: []
+ *     description: >
+ *       This endpoint toggles the completion status of a workout for a specific date.
+ *       If the date already exists in the progress list, it will be removed (unmarked).
+ *       If the date doesn't exist, it will be added (marked as complete).
+ *       Note: Only the day part of the date will be considered, time will be set to 00:00:00.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/FitnessRequest'
+ *             type: object
+ *             required:
+ *               - date
+ *             properties:
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: The date when the workout was completed (e.g., "2025-06-26T00:00:00.000Z")
+ *           example:
+ *             date: "2025-06-26T00:00:00.000Z"
  *     responses:
  *       200:
- *         description: Generated fitness plan
+ *         description: Workout completion status toggled successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/FitnessResponse'
+ *               $ref: '#/components/schemas/WorkoutCompletionResponse'
+ *       400:
+ *         description: Invalid request data (missing or invalid date)
+ *       401:
+ *         description: Unauthorized - Invalid token
+ *       404:
+ *         description: Fitness plan not found for the user
  *       500:
- *         description: Error generating plan
+ *         description: Server error
  */
-router.post("/vertexai", authMiddleware, generateVertexAiFitnessPlan);
-
-/**
- * @swagger
- * /fitness/gemini:
- *   post:
- *     summary: Generate fitness plan using Gemini
- *     tags: [Fitness]
- *     security:
- *       - firebaseAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/FitnessRequest'
- *     responses:
- *       200:
- *         description: Generated fitness plan
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/FitnessResponse'
- *       500:
- *         description: Error generating plan
- */
-router.post("/gemini", authMiddleware, generateGeminiFitnessPlan);
+router.post("/mark-workout", authMiddleware, markWorkoutComplete);
 
 export default router;

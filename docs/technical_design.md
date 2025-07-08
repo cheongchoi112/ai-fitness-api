@@ -50,33 +50,21 @@ This collection stores core user information, including authentication details a
     "email": "<String>" // Should match the email used in Firebase Auth
   },
   "profile": {          // Stores user's personal and preference data from the survey.
-    "personalGoalsExperience": {
-      "primaryFitnessGoal": "<String>",
-      "currentWeightLbs": "<Number>",
-      "desiredWeightLbs": "<Number>",
-      "heightCms": "<Number>",
-      "currentFitnessLevel": "<String>",
-      "ageGroup": "<String>"
-    },
-    "scheduleAvailability": {
-      "daysPerWeekWorkout": "<String>",
-      "preferredWorkoutTimes": "<String>"
-    },
-    "equipmentAccess": {
-      "equipment": ,
-      "location": "<String>"
-    },
-    "dietaryPreferences": {
-      "primaryDietaryPreference": "<String>",
-      "restrictionsAllergies":
-    },
-    "healthConsiderations": {
-      "medicalConditions": "<String>",
-      "workoutsToAvoid":
-    },
-    "preferencesMotivation": {
-      "enjoyedWorkoutTypes":
-    }
+    "fitnessGoals": ["<String>"], // Array of fitness goals e.g. ["Build muscle", "Lose weight"]
+    "currentWeight": "<String>", // Current weight in pounds as a string
+    "desiredWeight": "<String>", // Desired weight in pounds as a string
+    "height": "<String>", // Height in inches as a string
+    "fitnessLevel": "<String>", // e.g. "Beginner", "Intermediate", "Advanced"
+    "ageGroup": "<String>", // e.g. "18-24", "25-34", "35-44"
+    "workoutDaysPerWeek": "<Number>", // Number of days per week user can work out
+    "preferredWorkoutTime": "<String>", // e.g. "Morning", "Midday", "Evening"
+    "availableEquipment": ["<String>"], // Array of available equipment
+    "dietaryPreferences": ["<String>"], // Array of dietary preferences
+    "dietaryRestrictions": ["<String>"], // Array of dietary restrictions
+    "otherRestrictions": "<String>", // Any other restrictions as free text
+    "healthConsiderations": "<String>", // Any health considerations as free text
+    "enjoyedWorkouts": ["<String>"], // Array of workout types the user enjoys
+    "workoutsToAvoid": ["<String>"] // Array of workout types to avoid
   },
   "createdAt": "<Date>", // Timestamp for user creation.
   "updatedAt": "<Date>"  // Timestamp for last profile update.
@@ -173,7 +161,7 @@ These flows detail the sequence of user actions and system responses.
 1.  **Credential Entry**: User enters email/password in mobile app.
 2.  **Authentication**: Mobile app sends credentials to Firebase Auth. Firebase validates and returns a token.
 3.  **Token Storage**: Mobile app receives the token and stores it.
-4.  **User Data Request**: Mobile app calls `/api/users/signin` with token in Authorization header.
+4.  **User Data Request**: Mobile app calls `/api/users/profile` with token in Authorization header.
 5.  **Token Verification**: API backend verifies Firebase token with authMiddleware.
 6.  **Data Fetching**: API queries MongoDB for user profile and fitness plan using Firebase user ID.
 7.  **Response**: API returns combined user and fitness plan data to mobile app.
@@ -188,14 +176,14 @@ These flows detail the sequence of user actions and system responses.
 
 ### 4.3. Track Workout Completion
 
-**Description**: How a user marks a workout as completed and updates their progress.
+**Description**: How a user marks/unmarks a workout as completed and updates their progress.
 
 ![Track Workout](./uml_diagrams/Track%20Workout.png)
 
 **Steps**:
 
-1.  **User Marks Workout Complete**: The user marks a workout as completed for a given day in the front-end.
-2.  **Submit Workout Completion**: The front-end sends an HTTP request to the back-end to record the completion.
+1.  **User Marks Workout Complete**: The user marks/unmarks a workout as completed for a given day in the front-end.
+2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/fitness/mark-workout` to the back-end to record the completion.
 3.  **Record Progress**: The back-end adds the completion date to the `progress` list within the user's current `fitnessPlans` document in MongoDB.
 4.  **Confirm Update**: The back-end sends a success response to the front-end.
 5.  **Display Confirmation**: The front-end visually updates the completed workout.
