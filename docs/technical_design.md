@@ -90,7 +90,7 @@ This collection stores core user information, including authentication details a
 
 ### 3.2. `fitnessPlans` Collection Schema
 
-This collection stores individual fitness and diet plans generated for users, along with progress tracking.
+This collection stores individual fitness and diet plans generated for users by the AI.
 
 ```javascript
 // fitnessPlans collection
@@ -192,17 +192,22 @@ These flows detail the sequence of user actions and system responses.
 
 ### 4.3. Track Workout Completion
 
-**Description**: How a user marks/unmarks a workout as completed and updates their progress.
+**Description**: How a user records workout completion and updates their progress.
 
 ![Track Workout](./uml_diagrams/Track%20Workout.png)
 
 **Steps**:
 
-1.  **User Marks Workout Complete**: The user marks/unmarks a workout as completed for a given day in the front-end.
-2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/progress/workout` to the back-end to record the completion.
+1.  **User Records Workout Completion**: The user enters workout completion details in the front-end, including date, optional notes, and workout reference.
+2.  **Submit Workout Data**: The front-end sends an HTTP POST request to `/api/progress/workout` with the workout completion data.
 3.  **Record Progress**: The back-end adds the workout entry to the `progress.workoutHistory` array within the user's document in MongoDB.
-4.  **Confirm Update**: The back-end sends a success response to the front-end.
-5.  **Display Confirmation**: The front-end visually updates the completed workout.
+4.  **Confirm Update**: The back-end sends a success response with the created entry to the front-end.
+5.  **Display Confirmation**: The front-end visually updates the completed workout and refreshes the workout history display if needed.
+
+**For Updating or Removing Workout Entries**:
+
+1. **Update Workout Entry**: The front-end sends an HTTP PUT request to `/api/progress/workout/:entryId` with updated data.
+2. **Delete Workout Entry**: The front-end sends an HTTP DELETE request to `/api/progress/workout/:entryId` to remove an entry.
 
 ### 4.4. Progress Tracking
 

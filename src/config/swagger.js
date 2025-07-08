@@ -204,18 +204,8 @@ const options = {
             },
           },
         },
-        WorkoutCompletionResponse: {
-          type: "object",
-          properties: {
-            message: {
-              type: "string",
-              description: "Success message",
-            },
-            entry: {
-              $ref: "#/components/schemas/ProgressWorkoutEntry",
-            },
-          },
-        },
+        // WorkoutCompletionResponse schema has been removed as the mark-workout endpoint is no longer used.
+        // Progress tracking now uses the ProgressEntryResponse schema.
         UserProfileResponse: {
           type: "object",
           properties: {
