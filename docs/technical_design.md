@@ -66,6 +66,23 @@ This collection stores core user information, including authentication details a
     "enjoyedWorkouts": ["<String>"], // Array of workout types the user enjoys
     "workoutsToAvoid": ["<String>"] // Array of workout types to avoid
   },
+  "progress": {          // Stores user's progress tracking data
+    "weightHistory": [   // Array of weight entries
+      {
+        "_id": "<ObjectId>", // Unique identifier for this entry
+        "date": "<Date>",    // Date when weight was recorded
+        "weight": "<Number>" // Weight value in user's preferred unit
+      }
+    ],
+    "workoutHistory": [  // Array of workout completion records
+      {
+        "_id": "<ObjectId>", // Unique identifier for this entry
+        "date": "<Date>",    // Date when workout was completed
+        "workoutId": "<String>", // Optional reference to specific workout in fitness plan
+        "notes": "<String>"  // Optional notes about the workout completion
+      }
+    ]
+  },
   "createdAt": "<Date>", // Timestamp for user creation.
   "updatedAt": "<Date>"  // Timestamp for last profile update.
 }
@@ -121,7 +138,6 @@ This collection stores individual fitness and diet plans generated for users, al
     },
     "general_notes": "<String>" // Any overall tips or disclaimers for the plan.
   },
-  "progress": ,   // A list of dates when the user marked *any* progress (e.g., completed a workout/meal for that day).
   "createdAt": "<Date>",    // Timestamp for when this plan was generated/created.
   "updatedAt": "<Date>"     // Timestamp for last update to the plan or progress.
 }
@@ -183,12 +199,31 @@ These flows detail the sequence of user actions and system responses.
 **Steps**:
 
 1.  **User Marks Workout Complete**: The user marks/unmarks a workout as completed for a given day in the front-end.
-2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/fitness/mark-workout` to the back-end to record the completion.
-3.  **Record Progress**: The back-end adds the completion date to the `progress` list within the user's current `fitnessPlans` document in MongoDB.
+2.  **Submit Workout Completion**: The front-end sends an HTTP request `/api/progress/workout` to the back-end to record the completion.
+3.  **Record Progress**: The back-end adds the workout entry to the `progress.workoutHistory` array within the user's document in MongoDB.
 4.  **Confirm Update**: The back-end sends a success response to the front-end.
 5.  **Display Confirmation**: The front-end visually updates the completed workout.
 
-### 4.4. User Account Deletion
+### 4.4. Progress Tracking
+
+**Description**: How users track their weight history and view their progress over time.
+
+**Steps**:
+
+1. **User Records Weight**: The user enters a new weight measurement in the front-end.
+2. **Submit Weight Data**: The front-end sends an HTTP request to `/api/progress/weight` with the weight and date information.
+3. **Store Progress**: The back-end adds the entry to the `progress.weightHistory` array within the user's document in MongoDB.
+4. **Confirm Update**: The back-end sends a success response with the created entry to the front-end.
+5. **Display Progress**: The front-end updates to show the new entry and refreshes any progress charts or statistics.
+
+**For Progress History Retrieval**:
+
+1. **User Views Progress History**: The user navigates to the progress section in the front-end.
+2. **Request History Data**: The front-end sends HTTP requests to `/api/progress/workout-history` and `/api/progress/weight-history`.
+3. **Retrieve History**: The back-end queries the user document and extracts the requested history arrays.
+4. **Display History**: The front-end renders the history data as charts or lists for the user to track their progress over time.
+
+### 4.5. User Account Deletion
 
 **Description**: The process of a user permanently deleting their account and associated data.
 
