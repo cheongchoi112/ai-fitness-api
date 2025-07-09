@@ -10,6 +10,23 @@ const COLLECTION_NAME = "users";
 // Connect to MongoDB
 const client = new MongoClient(MONGODB_URI);
 
+// Import the function from progressService
+import { addWeightEntry } from "./progressService.js";
+
+// Helper function to create progress structure with initial weight entry
+const createInitialProgressWithWeight = (initialWeight, date = new Date()) => {
+  return {
+    workoutHistory: [],
+    weightHistory: [
+      {
+        _id: new ObjectId(),
+        date: date,
+        weight: initialWeight,
+      },
+    ],
+  };
+};
+
 /**
  * Create or update user profile with onboarding data
  * @param {string} userId - Firebase user ID
@@ -47,12 +64,27 @@ export const createOrUpdateUserProfile = async (userId, userData) => {
         firebaseUserId: userId,
         userInfo: userData.userInfo,
         profile: userData.profile,
+        progress: {
+          workoutHistory: [],
+          weightHistory: [],
+        },
         createdAt: new Date(),
         updatedAt: new Date(),
       };
 
+      // Insert the new user first
       const result = await usersCollection.insertOne(newUser);
-      return newUser;
+
+      // Add initial weight entry if available in profile
+      if (userData.profile && userData.profile.currentWeight !== undefined) {
+        await addWeightEntry(userId, {
+          date: new Date(),
+          weight: userData.profile.currentWeight,
+        });
+      }
+
+      // Return the newly created user with any additions
+      return await usersCollection.findOne({ firebaseUserId: userId });
     }
   } catch (error) {
     console.error("Error creating/updating user profile:", error);

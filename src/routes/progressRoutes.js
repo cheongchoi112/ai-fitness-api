@@ -8,6 +8,7 @@ import {
   updateWeight,
   deleteWeight,
   getWeights,
+  getUserProgress,
 } from "../controllers/progressController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
@@ -15,6 +16,65 @@ const router = express.Router();
 
 // All routes require authentication
 router.use(authMiddleware);
+
+/**
+ * @swagger
+ * /progress:
+ *   get:
+ *     summary: Get comprehensive progress data with metrics
+ *     tags: [Progress]
+ *     security:
+ *       - bearerAuth: []
+ *     description: >
+ *       Returns combined weight and workout history with calculated metrics.
+ *       Includes basic statistics, goal tracking, and frequency metrics.
+ *     parameters:
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Filter entries after this date (ISO format)
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date-time
+ *         description: Filter entries before this date (ISO format)
+ *     responses:
+ *       200:
+ *         description: Comprehensive progress data with metrics
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 weightData:
+ *                   type: object
+ *                   properties:
+ *                     history:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/ProgressWeightEntry'
+ *                     metrics:
+ *                       type: object
+ *                 workoutData:
+ *                   type: object
+ *                   properties:
+ *                     history:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/ProgressWorkoutEntry'
+ *                     metrics:
+ *                       type: object
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/", getUserProgress);
 
 /**
  * @swagger

@@ -162,3 +162,102 @@
   ]
 }
 ```
+
+## Comprehensive Progress Endpoint
+
+### Get comprehensive progress with metrics
+
+```javascript
+// GET /api/progress?startDate=2025-06-01T00:00:00Z&endDate=2025-07-08T23:59:59Z
+
+// Response (200 OK)
+{
+  "weightData": {
+    "history": [
+      {
+        "_id": "60e7a3d2c2f2c13a7c23a4c1",
+        "date": "2025-06-05T08:00:00Z",
+        "weight": 175.5
+      },
+      {
+        "_id": "60e7a3e5c2f2c13a7c23a4c2",
+        "date": "2025-06-20T07:45:00Z",
+        "weight": 174.2
+      },
+      {
+        "_id": "60e7a3f1c2f2c13a7c23a4c3",
+        "date": "2025-07-01T08:15:00Z",
+        "weight": 173.5
+      }
+    ],
+    "metrics": {
+      "basicStats": {
+        "totalEntries": 3,
+        "averageWeight": 174.4,
+        "minWeight": 173.5,
+        "maxWeight": 175.5,
+        "totalChange": -2.0,
+        "currentWeight": 173.5,
+        "startingWeight": 175.5
+      },
+      "trends": {
+        "weeklyChangeRate": -0.77
+      },
+      "goalTracking": {
+        "hasGoal": true,
+        "desiredWeight": 170,
+        "currentWeight": 173.5,
+        "distanceToGoal": 3.5,
+        "estimatedWeeksToGoal": 4.5,
+        "percentageAchieved": 36.4
+      }
+    }
+  },
+  "workoutData": {
+    "history": [
+      {
+        "_id": "60e7a3b9c2f2c13a7c23a4b5",
+        "date": "2025-06-10T08:30:00Z",
+        "workoutId": "monday_cardio",
+        "notes": "Completed full cardio routine"
+      },
+      {
+        "_id": "60e7a3c1c2f2c13a7c23a4b6",
+        "date": "2025-06-12T18:30:00Z",
+        "workoutId": "wednesday_strength",
+        "notes": "Completed strength training"
+      },
+      {
+        "_id": "60e7a3d1c2f2c13a7c23a4b7",
+        "date": "2025-06-13T17:30:00Z",
+        "workoutId": "friday_hiit",
+        "notes": "Completed HIIT session"
+      },
+      {
+        "_id": "60e7a3e2c2f2c13a7c23a4b8",
+        "date": "2025-06-17T07:30:00Z",
+        "workoutId": "tuesday_yoga",
+        "notes": "Completed yoga session"
+      }
+    ],
+    "metrics": {
+      "frequency": {
+        "totalWorkouts": 4,
+        "workoutsPerWeek": 1.4,
+        "daysTracked": 20,
+        "longestStreak": 2
+      },
+      "mostRecent": {
+        "_id": "60e7a3e2c2f2c13a7c23a4b8",
+        "date": "2025-06-17T07:30:00Z",
+        "workoutId": "tuesday_yoga",
+        "notes": "Completed yoga session"
+      }
+    }
+  },
+  "dateRange": {
+    "startDate": "2025-06-01T00:00:00.000Z",
+    "endDate": "2025-07-08T23:59:59.000Z"
+  }
+}
+```

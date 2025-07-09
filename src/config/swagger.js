@@ -206,6 +206,89 @@ const options = {
         },
         // WorkoutCompletionResponse schema has been removed as the mark-workout endpoint is no longer used.
         // Progress tracking now uses the ProgressEntryResponse schema.
+
+        ProgressMetricsResponse: {
+          type: "object",
+          properties: {
+            weightData: {
+              type: "object",
+              properties: {
+                history: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/ProgressWeightEntry",
+                  },
+                  description: "Array of weight entries",
+                },
+                metrics: {
+                  type: "object",
+                  description: "Calculated weight metrics",
+                  properties: {
+                    basicStats: {
+                      type: "object",
+                      description: "Basic weight statistics",
+                    },
+                    trends: {
+                      type: "object",
+                      description: "Weight trend metrics",
+                    },
+                    goalTracking: {
+                      type: "object",
+                      description: "Weight goal progress metrics",
+                    },
+                  },
+                },
+              },
+            },
+            workoutData: {
+              type: "object",
+              properties: {
+                history: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/ProgressWorkoutEntry",
+                  },
+                  description: "Array of workout entries",
+                },
+                metrics: {
+                  type: "object",
+                  description: "Calculated workout metrics",
+                  properties: {
+                    frequency: {
+                      type: "object",
+                      description: "Workout frequency metrics",
+                    },
+                    mostRecent: {
+                      $ref: "#/components/schemas/ProgressWorkoutEntry",
+                    },
+                  },
+                },
+              },
+            },
+            dateRange: {
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    startDate: {
+                      type: "string",
+                      format: "date-time",
+                    },
+                    endDate: {
+                      type: "string",
+                      format: "date-time",
+                    },
+                  },
+                },
+                {
+                  type: "string",
+                  example: "all-time",
+                },
+              ],
+              description: "The date range for which metrics were calculated",
+            },
+          },
+        },
         UserProfileResponse: {
           type: "object",
           properties: {

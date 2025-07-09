@@ -19,6 +19,7 @@ import {
   deleteWeightEntry,
   getWeightHistory,
 } from "../services/progressService.js";
+import { getUserProgressWithMetrics } from "../services/progressMetricsService.js";
 
 /**
  * Add a new workout completion record
@@ -235,5 +236,32 @@ export const getWeights = async (req, res) => {
   } catch (error) {
     console.error("Error getting weight history:", error);
     res.status(500).json({ error: "Failed to retrieve weight history" });
+  }
+};
+
+/**
+ * Get user's comprehensive progress data with metrics
+ * @route GET /api/progress
+ */
+export const getUserProgress = async (req, res) => {
+  try {
+    const userId = req.user.uid;
+    const { startDate, endDate } = req.query;
+
+    const options = {};
+    if (startDate) options.startDate = new Date(startDate);
+    if (endDate) options.endDate = new Date(endDate);
+
+    const progressData = await getUserProgressWithMetrics(userId, options);
+
+    res.status(200).json(progressData);
+  } catch (error) {
+    console.error("Error getting user progress:", error);
+
+    if (error.message === "User not found") {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(500).json({ error: "Failed to retrieve progress data" });
   }
 };

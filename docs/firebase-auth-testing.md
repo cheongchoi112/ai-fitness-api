@@ -9,7 +9,7 @@ Use `get-firebase-token.js` to get a real Firebase ID token using email/password
 ### For existing users:
 
 ```bash
-node get-firebase-token.js login user@example.com password123
+node get-firebase-token.js login joetest@test.com password1
 ```
 
 ### For new users (will create the user first):
