@@ -5,6 +5,7 @@ import {
 } from "../services/userService.js";
 import { saveFitnessPlan } from "../services/fitnessService.js";
 import { generateContent as generateGeminiContent } from "../services/aiFitnessServiceGemini.js";
+import { enhanceFitnessPlanWithImages } from "../services/fitnessImageService.js";
 
 /**
  * Process user onboarding and generate personalized fitness plan
@@ -73,8 +74,15 @@ export const onboardUser = async (req, res) => {
       });
     }
 
+    // Enhance fitness plan with images
+    console.log(
+      "Enhancing fitness plan with images for exercises and meals..."
+    );
+
+    const enhancedPlan = await enhanceFitnessPlanWithImages(parsedPlan);
+
     // Save plan to MongoDB
-    const savedPlan = await saveFitnessPlan(userId, parsedPlan);
+    const savedPlan = await saveFitnessPlan(userId, enhancedPlan);
 
     // Return user profile and fitness plan
     res.status(200).json({
@@ -133,8 +141,13 @@ export const regeneratePlan = async (req, res) => {
       });
     }
 
+    // Enhance fitness plan with images
+    console.log("Enhancing regenerated fitness plan with images...");
+
+    const enhancedPlan = await enhanceFitnessPlanWithImages(parsedPlan);
+
     // Save or update plan in MongoDB
-    const savedPlan = await saveFitnessPlan(userId, parsedPlan);
+    const savedPlan = await saveFitnessPlan(userId, enhancedPlan);
 
     res.status(200).json({
       message: "Fitness plan regenerated successfully",
