@@ -190,7 +190,7 @@ These flows detail the sequence of user actions and system responses.
 3.  **Token Management**: Mobile app refreshes token before expiration.
 4.  **Logout**: On user logout, mobile app clears token and notifies Firebase.
 
-### 4.3. Track Workout Completion
+### 4.3.1. Progress Tracking - Track Workout Completion
 
 **Description**: How a user records workout completion and updates their progress.
 
@@ -209,7 +209,7 @@ These flows detail the sequence of user actions and system responses.
 1. **Update Workout Entry**: The front-end sends an HTTP PUT request to `/api/progress/workout/:entryId` with updated data.
 2. **Delete Workout Entry**: The front-end sends an HTTP DELETE request to `/api/progress/workout/:entryId` to remove an entry.
 
-### 4.4. Progress Tracking
+### 4.3.2. Progress Tracking - Track Weight History
 
 **Description**: How users track their weight history and view their progress over time.
 
@@ -221,14 +221,7 @@ These flows detail the sequence of user actions and system responses.
 4. **Confirm Update**: The back-end sends a success response with the created entry to the front-end.
 5. **Display Progress**: The front-end updates to show the new entry and refreshes any progress charts or statistics.
 
-**For Progress History Retrieval**:
-
-1. **User Views Progress History**: The user navigates to the progress section in the front-end.
-2. **Request History Data**: The front-end sends HTTP requests to `/api/progress/workout-history` and `/api/progress/weight-history`.
-3. **Retrieve History**: The back-end queries the user document and extracts the requested history arrays.
-4. **Display History**: The front-end renders the history data as charts or lists for the user to track their progress over time.
-
-### 4.5. User Account Deletion
+### 4.4. User Account Deletion
 
 **Description**: The process of a user permanently deleting their account and associated data.
 
