@@ -2,7 +2,8 @@
 // npm install @google/genai mime
 
 import { GoogleGenAI } from "@google/genai";
-import { promptInstruction, responseSchema } from "./constants.js";
+import { promptInstruction } from "./constants/promptInstruction.js";
+import { responseSchema } from "./constants/responseSchema.js";
 import dotenv from "dotenv";
 
 dotenv.config();

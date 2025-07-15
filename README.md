@@ -106,32 +106,31 @@ Access the Swagger UI documentation at:
 http://localhost:3000/api-docs
 ```
 
+```
+https://ai-fitness-api-502455513054.us-central1.run.app/api-docs/
+```
+
 ## Sample Request & Response
 
 ### Request
 
 ```json
 {
-  "personalGoalsExperience": {
-    "primaryFitnessGoal": "Build muscle",
-    "currentWeightLbs": 170,
-    "desiredWeightLbs": 185,
-    "heightCms": 175,
-    "currentFitnessLevel": "Intermediate",
-    "ageGroup": "25-34"
-  },
-  "scheduleAvailability": {
-    "daysPerWeekWorkout": "3-4",
-    "preferredWorkoutTimes": "Evening"
-  },
-  "equipmentAccess": {
-    "equipment": ["Dumbbells", "Resistance bands", "Full gym access"],
-    "location": "At the gym"
-  },
-  "dietaryPreferences": {
-    "primaryDietaryPreference": "High-protein",
-    "restrictionsAllergies": ["Nut-free"]
-  }
+  "fitnessGoals": ["Build muscle"],
+  "currentWeight": "200",
+  "desiredWeight": "180",
+  "height": "74",
+  "fitnessLevel": "Intermediate",
+  "ageGroup": "25-34",
+  "workoutDaysPerWeek": 4,
+  "preferredWorkoutTime": "Midday",
+  "availableEquipment": ["Dumbbells"],
+  "dietaryPreferences": ["No preference"],
+  "dietaryRestrictions": [],
+  "otherRestrictions": "",
+  "healthConsiderations": "",
+  "enjoyedWorkouts": ["HIIT", "Strength Training"],
+  "workoutsToAvoid": []
 }
 ```
 

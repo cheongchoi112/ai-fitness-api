@@ -115,8 +115,8 @@ This collection stores individual fitness and diet plans generated for users by 
         },
         "diet": {
           "daily_notes": "<String>",
-          "estimated_calories": "<Number>",
           "macronutrient_summary": {
+            "estimated_calories": "<Number>",
             "protein_grams": "<Number>",
             "carbs_grams": "<Number>",
             "fat_grams": "<Number>"
