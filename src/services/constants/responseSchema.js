@@ -17,7 +17,7 @@ const daySchema = {
           type: "array",
           items: {
             type: "object",
-            required: ["name", "sets", "reps"],
+            required: ["name", "sets", "reps", "notes"],
             properties: {
               name: {
                 type: "string",
@@ -48,6 +48,12 @@ const daySchema = {
         },
         macronutrient_summary: {
           type: "object",
+          required: [
+            "estimated_calories",
+            "protein_grams",
+            "carbs_grams",
+            "fat_grams",
+          ],
           properties: {
             estimated_calories: {
               type: "integer",
