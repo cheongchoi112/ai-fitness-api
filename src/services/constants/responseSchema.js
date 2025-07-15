@@ -41,7 +41,7 @@ const daySchema = {
     },
     diet: {
       type: "object",
-      required: ["meals_list"],
+      required: ["meals_list", "macronutrient_summary"],
       properties: {
         daily_notes: {
           type: "string",
