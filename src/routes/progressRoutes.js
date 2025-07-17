@@ -28,6 +28,9 @@ router.use(authMiddleware);
  *     description: >
  *       Returns combined weight and workout history with calculated metrics.
  *       Includes basic statistics, goal tracking, and frequency metrics.
+ *       When both startDate and endDate are specified for weight history,
+ *       the response includes interpolated weight values for the start and end dates
+ *       based on the closest available data, ensuring the date range boundaries are included.
  *     parameters:
  *       - in: query
  *         name: startDate
@@ -327,6 +330,11 @@ router.delete("/weight/:entryId", deleteWeight);
  *     tags: [Progress]
  *     security:
  *       - bearerAuth: []
+ *     description: >
+ *       Returns the user's weight history with optional date filtering.
+ *       When both startDate and endDate are specified, the response includes
+ *       interpolated weight values for the start and end dates based on the
+ *       closest available data, ensuring the date range boundaries are included.
  *     parameters:
  *       - in: query
  *         name: startDate

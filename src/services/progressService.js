@@ -298,7 +298,7 @@ export const addWeightEntry = async (userId, weightData) => {
     const weightEntry = {
       _id: new ObjectId(),
       date: new Date(weightData.date),
-      weight: weightData.weight,
+      weight: parseFloat(weightData.weight), // Ensure weight is stored as a number
     };
 
     await usersCollection.updateOne(
@@ -337,7 +337,9 @@ export const updateWeightEntry = async (userId, entryId, weightData) => {
     if (weightData.date)
       updateFields["progress.weightHistory.$.date"] = new Date(weightData.date);
     if (weightData.weight !== undefined)
-      updateFields["progress.weightHistory.$.weight"] = weightData.weight;
+      updateFields["progress.weightHistory.$.weight"] = parseFloat(
+        weightData.weight
+      );
 
     // Update the entry
     const result = await usersCollection.updateOne(
@@ -416,7 +418,7 @@ export const deleteWeightEntry = async (userId, entryId) => {
  * @param {Object} options - Query options
  * @param {Date} [options.startDate] - Filter entries after this date
  * @param {Date} [options.endDate] - Filter entries before this date
- * @returns {Promise<Array>} Array of weight entries
+ * @returns {Promise<Array>} Array of weight entries with interpolated start/end dates when specified
  */
 export const getWeightHistory = async (userId, options = {}) => {
   try {
@@ -433,29 +435,111 @@ export const getWeightHistory = async (userId, options = {}) => {
       return [];
     }
 
-    let weightHistory = user.progress.weightHistory;
+    let weightHistory = [...user.progress.weightHistory];
 
-    // Apply date filters if provided
-    if (options.startDate || options.endDate) {
+    // Normalize weight values to numbers and sort by date (oldest first for processing)
+    weightHistory = weightHistory.map((entry) => ({
+      ...entry,
+      weight: parseFloat(entry.weight), // Ensure weight is always a number
+    }));
+    weightHistory.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // If both start and end dates are specified, add interpolated values for those dates
+    if (options.startDate && options.endDate) {
+      const startDate = new Date(options.startDate);
+      const endDate = new Date(options.endDate);
+
+      // Find the closest weight for the start date
+      const beforeStart = weightHistory.filter(
+        (entry) => new Date(entry.date) <= startDate
+      );
+      let startWeight = null;
+
+      if (beforeStart.length > 0) {
+        // Use the closest weight before or on the start date
+        startWeight = parseFloat(beforeStart[beforeStart.length - 1].weight);
+      } else {
+        // If no entries before start date, use the first available weight after start date
+        const afterStart = weightHistory.filter(
+          (entry) => new Date(entry.date) > startDate
+        );
+        if (afterStart.length > 0) {
+          startWeight = parseFloat(afterStart[0].weight);
+        }
+      }
+
+      // Find the closest weight before or on the end date
+      const beforeEnd = weightHistory.filter(
+        (entry) => new Date(entry.date) <= endDate
+      );
+      const endWeight =
+        beforeEnd.length > 0
+          ? parseFloat(beforeEnd[beforeEnd.length - 1].weight)
+          : null;
+
+      // Add interpolated entries if we have weight data
+      if (startWeight !== null) {
+        // Check if we already have an entry for the start date
+        const hasStartEntry = weightHistory.some(
+          (entry) =>
+            new Date(entry.date).toDateString() === startDate.toDateString()
+        );
+
+        if (!hasStartEntry) {
+          weightHistory.push({
+            _id: new ObjectId(),
+            date: startDate,
+            weight: startWeight,
+            interpolated: true,
+          });
+        }
+      }
+
+      if (endWeight !== null) {
+        // Check if we already have an entry for the end date
+        const hasEndEntry = weightHistory.some(
+          (entry) =>
+            new Date(entry.date).toDateString() === endDate.toDateString()
+        );
+
+        if (!hasEndEntry) {
+          weightHistory.push({
+            _id: new ObjectId(),
+            date: endDate,
+            weight: endWeight,
+            interpolated: true,
+          });
+        }
+      }
+
+      // Filter to only include entries within the date range
       weightHistory = weightHistory.filter((entry) => {
         const entryDate = new Date(entry.date);
-        let includeEntry = true;
-
-        if (options.startDate) {
-          const startDate = new Date(options.startDate);
-          includeEntry = includeEntry && entryDate >= startDate;
-        }
-
-        if (options.endDate) {
-          const endDate = new Date(options.endDate);
-          includeEntry = includeEntry && entryDate <= endDate;
-        }
-
-        return includeEntry;
+        return entryDate >= startDate && entryDate <= endDate;
       });
+    } else {
+      // Apply original date filters if only one date is provided
+      if (options.startDate || options.endDate) {
+        weightHistory = weightHistory.filter((entry) => {
+          const entryDate = new Date(entry.date);
+          let includeEntry = true;
+
+          if (options.startDate) {
+            const startDate = new Date(options.startDate);
+            includeEntry = includeEntry && entryDate >= startDate;
+          }
+
+          if (options.endDate) {
+            const endDate = new Date(options.endDate);
+            includeEntry = includeEntry && entryDate <= endDate;
+          }
+
+          return includeEntry;
+        });
+      }
     }
 
-    // Sort by date (newest first)
+    // Sort by date (newest first) for final return
     return weightHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
   } catch (error) {
     console.error("Error getting weight history:", error);

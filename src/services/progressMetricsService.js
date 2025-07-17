@@ -32,14 +32,15 @@ const calculateWeightMetrics = (weightHistory, userProfile) => {
   );
 
   // Basic statistics
-  const weights = sortedEntries.map((entry) => entry.weight);
+  const weights = sortedEntries.map((entry) => parseFloat(entry.weight)); // Ensure all weights are numbers
   const firstEntry = sortedEntries[0];
   const lastEntry = sortedEntries[sortedEntries.length - 1];
   const averageWeight =
     weights.reduce((sum, weight) => sum + weight, 0) / weights.length;
   const minWeight = Math.min(...weights);
   const maxWeight = Math.max(...weights);
-  const totalChange = lastEntry.weight - firstEntry.weight;
+  const totalChange =
+    parseFloat(lastEntry.weight) - parseFloat(firstEntry.weight);
 
   // Calculate rate of change (per week)
   const firstDate = new Date(firstEntry.date);
@@ -51,7 +52,7 @@ const calculateWeightMetrics = (weightHistory, userProfile) => {
   let goalMetrics = { hasGoal: false };
   if (userProfile && userProfile.profile && userProfile.profile.desiredWeight) {
     const desiredWeight = parseFloat(userProfile.profile.desiredWeight);
-    const currentWeight = lastEntry.weight;
+    const currentWeight = parseFloat(lastEntry.weight);
     const distanceToGoal = currentWeight - desiredWeight;
 
     // Estimated weeks to reach goal based on current trend
@@ -92,8 +93,8 @@ const calculateWeightMetrics = (weightHistory, userProfile) => {
       minWeight,
       maxWeight,
       totalChange: parseFloat(totalChange.toFixed(1)),
-      currentWeight: lastEntry.weight,
-      startingWeight: firstEntry.weight,
+      currentWeight: parseFloat(lastEntry.weight),
+      startingWeight: parseFloat(firstEntry.weight),
     },
     trends: {
       weeklyChangeRate: parseFloat(weeklyChangeRate.toFixed(2)),
