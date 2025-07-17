@@ -41,45 +41,45 @@ const daySchema = {
     },
     diet: {
       type: "object",
-      required: ["meals_list", "macronutrient_summary"],
+      required: ["meals_list"],
       properties: {
         daily_notes: {
           type: "string",
-        },
-        macronutrient_summary: {
-          type: "object",
-          required: [
-            "estimated_calories",
-            "protein_grams",
-            "carbs_grams",
-            "fat_grams",
-          ],
-          properties: {
-            estimated_calories: {
-              type: "integer",
-            },
-            protein_grams: {
-              type: "integer",
-            },
-            carbs_grams: {
-              type: "integer",
-            },
-            fat_grams: {
-              type: "integer",
-            },
-          },
         },
         meals_list: {
           type: "array",
           items: {
             type: "object",
-            required: ["meal_type", "description"],
+            required: ["meal_type", "description", "macronutrient_summary"],
             properties: {
               meal_type: {
                 type: "string",
               },
               description: {
                 type: "string",
+              },
+              macronutrient_summary: {
+                type: "object",
+                required: [
+                  "estimated_calories",
+                  "protein_grams",
+                  "carbs_grams",
+                  "fat_grams",
+                ],
+                properties: {
+                  estimated_calories: {
+                    type: "integer",
+                  },
+                  protein_grams: {
+                    type: "integer",
+                  },
+                  carbs_grams: {
+                    type: "integer",
+                  },
+                  fat_grams: {
+                    type: "integer",
+                  },
+                },
               },
             },
           },

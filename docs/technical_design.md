@@ -115,16 +115,16 @@ This collection stores individual fitness and diet plans generated for users by 
         },
         "diet": {
           "daily_notes": "<String>",
-          "macronutrient_summary": {
-            "estimated_calories": "<Number>",
-            "protein_grams": "<Number>",
-            "carbs_grams": "<Number>",
-            "fat_grams": "<Number>"
-          },
           "meals_list": [
             {
               "meal_type": "<String>",
-              "description": "<String>"
+              "description": "<String>",
+              "macronutrient_summary": {
+                "estimated_calories": "<Number>",
+                "protein_grams": "<Number>",
+                "carbs_grams": "<Number>",
+                "fat_grams": "<Number>"
+              }
             }
           ]
         }

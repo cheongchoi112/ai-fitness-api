@@ -54,16 +54,16 @@ The output JSON should follow this schema, providing a plan structured by day fo
       },
       "diet": {
         "daily_notes": "string",  // General dietary advice for the day, e.g., "Focus on hydration", "Spread protein intake"
-        "macronutrient_summary": {    // Estimated macronutrient breakdown
-          "estimated_calories": "number", // Estimated total calories for the day
-          "protein_grams": "number",
-          "carbs_grams": "number",
-          "fat_grams": "number"
-        },
         "meals_list": [
           {
             "meal_type": "string",  // e.g., "Breakfast", "Lunch", "Dinner", "Snack 1", "Post-workout"
-            "description": "string" // Detailed description of the meal/recipe idea
+            "description": "string", // Detailed description of the meal/recipe idea
+            "macronutrient_summary": {    // Estimated macronutrient breakdown
+              "estimated_calories": "number", // Estimated total calories for the meal
+              "protein_grams": "number",
+              "carbs_grams": "number",
+              "fat_grams": "number"
+            }
           }
           // ... more meals for the day
         ]
