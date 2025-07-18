@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
-import { promptInstruction, vertextAiResponseSchema } from "./constants.js";
+import { promptInstruction } from "./constants/promptInstruction.js";
+import { vertextAiResponseSchema } from "./constants/vertextAiResponseSchema.js";
 
 // Initialize Vertex with your Cloud project and location
 const ai = new GoogleGenAI({

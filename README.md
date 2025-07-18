@@ -7,13 +7,15 @@ A RESTful API for generating personalized fitness and diet plans using AI models
 This API allows clients to:
 
 - Generate personalized fitness plans based on user preferences, goals, and constraints
-- Create and manage user profiles
+- Create and manage user profiles with comprehensive onboarding
+- Track fitness progress including workouts and weight measurements
 - Access API documentation through an interactive Swagger UI
 
 ## Features
 
 - **AI-Powered Fitness Plans**: Generate customized workout and diet plans using Google's Gemini and Vertex AI models
-- **User Management**: Create, read, update, and delete user profiles
+- **User Management**: Create, read, update, and delete user profiles with comprehensive onboarding
+- **Progress Tracking**: Track workouts, weight measurements, and fitness metrics over time
 - **Firebase Authentication**: Secure API endpoints with Firebase Auth
 - **API Documentation**: Interactive Swagger documentation for easy API exploration
 - **MongoDB Integration**: Store user data and preferences
@@ -68,19 +70,31 @@ The server will be running at `http://localhost:3000`.
 
 ### API Endpoints
 
-#### Fitness Plans (Protected - Require Authentication)
-
-- `POST /api/fitness/echo` - Test endpoint that echoes the request body
-- `POST /api/fitness/gemini` - Generate fitness plan using Google's Gemini AI (requires authentication)
-- `POST /api/fitness/vertexai` - Generate fitness plan using Vertex AI (requires authentication)
+All protected endpoints require Firebase authentication. Include the Firebase ID token in the Authorization header as a Bearer token.
 
 #### User Management
 
-- `POST /api/users/signup` - Register a new user (handled by Firebase client SDK)
-- `POST /api/users/login` - Login a user (handled by Firebase client SDK)
-- `GET /api/users/:id` - Get user by ID (requires authentication)
-- `PUT /api/users/:id` - Update user details (requires authentication)
-- `DELETE /api/users/:id` - Delete a user (requires authentication)
+- `POST /api/users/onboarding` - Complete user onboarding and generate personalized fitness plan
+- `POST /api/users/regenerate-plan` - Regenerate fitness plan for an existing user
+- `GET /api/users/profile` - Get current user profile with fitness plan
+- `DELETE /api/users/delete` - Delete user account and all associated data
+
+#### Fitness Plans
+
+- `POST /api/fitness/echo` - Test endpoint that echoes the request body
+- `POST /api/fitness/generate-plan-gemini` - Generate fitness plan using Google's Gemini AI
+
+#### Progress Tracking
+
+- `GET /api/progress` - Get comprehensive progress data with metrics (includes weight and workout history)
+- `POST /api/progress/workout` - Add a new workout completion record
+- `PUT /api/progress/workout/{entryId}` - Update an existing workout entry
+- `DELETE /api/progress/workout/{entryId}` - Delete a workout entry
+- `GET /api/progress/workout-history` - Get user's workout history with optional date filtering
+- `POST /api/progress/weight` - Add a new weight entry
+- `PUT /api/progress/weight/{entryId}` - Update an existing weight entry
+- `DELETE /api/progress/weight/{entryId}` - Delete a weight entry
+- `GET /api/progress/weight-history` - Get user's weight history with optional date filtering
 
 See [firebase-auth-guide.md](./docs/firebase-auth-guide.md) for authentication details.
 
@@ -92,32 +106,31 @@ Access the Swagger UI documentation at:
 http://localhost:3000/api-docs
 ```
 
+```
+https://ai-fitness-api-502455513054.us-central1.run.app/api-docs/
+```
+
 ## Sample Request & Response
 
 ### Request
 
 ```json
 {
-  "personalGoalsExperience": {
-    "primaryFitnessGoal": "Build muscle",
-    "currentWeightLbs": 170,
-    "desiredWeightLbs": 185,
-    "heightCms": 175,
-    "currentFitnessLevel": "Intermediate",
-    "ageGroup": "25-34"
-  },
-  "scheduleAvailability": {
-    "daysPerWeekWorkout": "3-4",
-    "preferredWorkoutTimes": "Evening"
-  },
-  "equipmentAccess": {
-    "equipment": ["Dumbbells", "Resistance bands", "Full gym access"],
-    "location": "At the gym"
-  },
-  "dietaryPreferences": {
-    "primaryDietaryPreference": "High-protein",
-    "restrictionsAllergies": ["Nut-free"]
-  }
+  "fitnessGoals": ["Build muscle"],
+  "currentWeight": "200",
+  "desiredWeight": "180",
+  "height": "74",
+  "fitnessLevel": "Intermediate",
+  "ageGroup": "25-34",
+  "workoutDaysPerWeek": 4,
+  "preferredWorkoutTime": "Midday",
+  "availableEquipment": ["Dumbbells"],
+  "dietaryPreferences": ["No preference"],
+  "dietaryRestrictions": [],
+  "otherRestrictions": "",
+  "healthConsiderations": "",
+  "enjoyedWorkouts": ["HIIT", "Strength Training"],
+  "workoutsToAvoid": []
 }
 ```
 

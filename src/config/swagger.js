@@ -53,47 +53,239 @@ const options = {
           type: "object",
           description: "Generated fitness plan",
         },
-        WorkoutCompletionResponse: {
+        ProgressWeightEntry: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+              description: "Unique identifier for this weight entry",
+            },
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the weight was recorded",
+            },
+            weight: {
+              type: "number",
+              description: "Weight value in user's preferred unit",
+            },
+          },
+          required: ["date", "weight"],
+        },
+        ProgressWorkoutEntry: {
+          type: "object",
+          properties: {
+            _id: {
+              type: "string",
+              description: "Unique identifier for this workout entry",
+            },
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the workout was completed",
+            },
+            workoutId: {
+              type: "string",
+              description:
+                "Optional reference to the specific workout in the fitness plan",
+            },
+            notes: {
+              type: "string",
+              description: "Optional notes about the workout",
+            },
+          },
+          required: ["date"],
+        },
+        AddWeightRequest: {
+          type: "object",
+          properties: {
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the weight was recorded",
+            },
+            weight: {
+              type: "number",
+              description: "Weight value in user's preferred unit",
+            },
+          },
+          required: ["date", "weight"],
+        },
+        UpdateWeightRequest: {
+          type: "object",
+          properties: {
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the weight was recorded",
+            },
+            weight: {
+              type: "number",
+              description: "Weight value in user's preferred unit",
+            },
+          },
+        },
+        AddWorkoutRequest: {
+          type: "object",
+          properties: {
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the workout was completed",
+            },
+            workoutId: {
+              type: "string",
+              description:
+                "Optional reference to the specific workout in the fitness plan",
+            },
+            notes: {
+              type: "string",
+              description: "Optional notes about the workout",
+            },
+          },
+          required: ["date"],
+        },
+        UpdateWorkoutRequest: {
+          type: "object",
+          properties: {
+            date: {
+              type: "string",
+              format: "date-time",
+              description: "Date when the workout was completed",
+            },
+            workoutId: {
+              type: "string",
+              description:
+                "Optional reference to the specific workout in the fitness plan",
+            },
+            notes: {
+              type: "string",
+              description: "Optional notes about the workout",
+            },
+          },
+        },
+        WeightHistoryResponse: {
+          type: "object",
+          properties: {
+            weightHistory: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/ProgressWeightEntry",
+              },
+              description: "Array of weight entries",
+            },
+          },
+        },
+        WorkoutHistoryResponse: {
+          type: "object",
+          properties: {
+            workoutHistory: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/ProgressWorkoutEntry",
+              },
+              description: "Array of workout completion records",
+            },
+          },
+        },
+        ProgressEntryResponse: {
           type: "object",
           properties: {
             message: {
               type: "string",
               description: "Success message",
             },
-            updatedPlan: {
+            entry: {
+              oneOf: [
+                { $ref: "#/components/schemas/ProgressWeightEntry" },
+                { $ref: "#/components/schemas/ProgressWorkoutEntry" },
+              ],
+              description: "The created or updated entry",
+            },
+          },
+        },
+        // WorkoutCompletionResponse schema has been removed as the mark-workout endpoint is no longer used.
+        // Progress tracking now uses the ProgressEntryResponse schema.
+
+        ProgressMetricsResponse: {
+          type: "object",
+          properties: {
+            weightData: {
               type: "object",
               properties: {
-                _id: {
-                  type: "string",
-                  description: "MongoDB document ID",
-                },
-                userId: {
-                  type: "string",
-                  description: "Firebase user ID",
-                },
-                plan: {
-                  type: "object",
-                  description: "Generated fitness plan",
-                },
-                progress: {
+                history: {
                   type: "array",
                   items: {
-                    type: "string",
-                    format: "date-time",
+                    $ref: "#/components/schemas/ProgressWeightEntry",
                   },
-                  description: "List of dates when workouts were completed",
+                  description: "Array of weight entries",
                 },
-                createdAt: {
-                  type: "string",
-                  format: "date-time",
-                  description: "Timestamp when the plan was created",
-                },
-                updatedAt: {
-                  type: "string",
-                  format: "date-time",
-                  description: "Timestamp when the plan was last updated",
+                metrics: {
+                  type: "object",
+                  description: "Calculated weight metrics",
+                  properties: {
+                    basicStats: {
+                      type: "object",
+                      description: "Basic weight statistics",
+                    },
+                    trends: {
+                      type: "object",
+                      description: "Weight trend metrics",
+                    },
+                    goalTracking: {
+                      type: "object",
+                      description: "Weight goal progress metrics",
+                    },
+                  },
                 },
               },
+            },
+            workoutData: {
+              type: "object",
+              properties: {
+                history: {
+                  type: "array",
+                  items: {
+                    $ref: "#/components/schemas/ProgressWorkoutEntry",
+                  },
+                  description: "Array of workout entries",
+                },
+                metrics: {
+                  type: "object",
+                  description: "Calculated workout metrics",
+                  properties: {
+                    frequency: {
+                      type: "object",
+                      description: "Workout frequency metrics",
+                    },
+                    mostRecent: {
+                      $ref: "#/components/schemas/ProgressWorkoutEntry",
+                    },
+                  },
+                },
+              },
+            },
+            dateRange: {
+              oneOf: [
+                {
+                  type: "object",
+                  properties: {
+                    startDate: {
+                      type: "string",
+                      format: "date-time",
+                    },
+                    endDate: {
+                      type: "string",
+                      format: "date-time",
+                    },
+                  },
+                },
+                {
+                  type: "string",
+                  example: "all-time",
+                },
+              ],
+              description: "The date range for which metrics were calculated",
             },
           },
         },

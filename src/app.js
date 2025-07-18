@@ -1,6 +1,7 @@
 import express from "express";
 import fitnessRoutes from "./routes/fitnessRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import progressRoutes from "./routes/progressRoutes.js";
 import { setupSwagger } from "./config/swagger.js";
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/fitness", fitnessRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/progress", progressRoutes);
 
 // Setup Swagger documentation
 setupSwagger(app);
