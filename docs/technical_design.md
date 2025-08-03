@@ -33,6 +33,10 @@ The system follows a microservice-oriented architecture with distinct components
 - Communication Protocol: HTTP/HTTPS (RESTful APIs)
 - Data Format: JSON
 
+### 2.3. Deployment Diagram
+
+![Deployment Diagram](./uml_diagrams/deploymentDiagram.png)
+
 ## 3. Database Schema
 
 ### 3.1. `users` Collection Schema
@@ -198,7 +202,7 @@ These flows detail the sequence of user actions and system responses.
 
 **Steps**:
 
-1.  **User Records Workout Completion**: The user enters workout completion details in the front-end, including date, optional notes, and workout reference.
+1.  **User Records Workout Completion**: The user selects a workout to complete for the date in the front-end.
 2.  **Submit Workout Data**: The front-end sends an HTTP POST request to `/api/progress/workout` with the workout completion data.
 3.  **Record Progress**: The back-end adds the workout entry to the `progress.workoutHistory` array within the user's document in MongoDB.
 4.  **Confirm Update**: The back-end sends a success response with the created entry to the front-end.
@@ -212,6 +216,8 @@ These flows detail the sequence of user actions and system responses.
 ### 4.3.2. Progress Tracking - Track Weight History
 
 **Description**: How users track their weight history and view their progress over time.
+
+![Track Weight](./uml_diagrams/TrackWeight.png)
 
 **Steps**:
 
